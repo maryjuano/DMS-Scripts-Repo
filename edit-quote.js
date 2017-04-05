@@ -416,9 +416,7 @@ $(document).ready(function () {
                 return pair[1];
             }
         }
-    }
-    //Added by Ernest Sarmiento 02-07-2016
-    removeBtn();
+    }    
 
 });
 
