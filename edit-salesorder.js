@@ -539,7 +539,7 @@ var AccessroiessGridInstance = {
         var sectionName = "ACCESSORIES";
         var attributes = [{ key: 'gsc_free', type: 'System.Boolean' },
         { key: 'gsc_productid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'product' },
-        { key: 'gsc_orderid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'order', value: idQueryString }];
+        { key: 'gsc_orderid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'salesorder', value: idQueryString }];
         var model = { id: 'gsc_sls_orderaccessoryid', entity: 'gsc_sls_orderaccessory', attr: attributes };
         var hotInstance = EditableGrid(options, $container, sectionName, odataQuery, model,
             {
@@ -565,7 +565,7 @@ var CabChasisGridInstance = {
         if (DMS.Settings.User.positionName == 'Cashier')
             var options = {
                 dataSchema: {
-                    gsc_sls_quotecabchassisid: null, gsc_financing: null,
+                    gsc_sls_ordercabchassisid: null, gsc_financing: null,
                     gsc_itemnumber: 0, gsc_vehiclecabchassisid: { Id: null, Name: null }
                 },
                 colHeaders: [
@@ -596,7 +596,7 @@ var CabChasisGridInstance = {
         else
             var options = {
                 dataSchema: {
-                    gsc_sls_quotecabchassisid: null, gsc_financing: null,
+                    gsc_sls_ordercabchassisid: null, gsc_financing: null,
                     gsc_itemnumber: 0, gsc_vehiclecabchassisid: { Id: null, Name: null }
                 },
                 colHeaders: [
@@ -626,7 +626,7 @@ var CabChasisGridInstance = {
 
         var sectionName = "CABCHASSIS";
         var attributes = [{ key: 'gsc_financing', type: 'System.Boolean' },
-        { key: 'gsc_orderid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'order', value: idQueryString },
+        { key: 'gsc_orderid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'salesorder', value: idQueryString },
         { key: 'gsc_vehiclecabchassisid', type: 'Microsoft.Xrm.Sdk.EntityReference', reference: 'gsc_sls_vehiclecabchassis' }];
         var model = { id: 'gsc_sls_ordercabchassisid', entity: 'gsc_sls_ordercabchassis', attr: attributes };
         var hotInstance = EditableGrid(options, $container, sectionName, odataQuery, model,
