@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    $('form fieldset').attr('disabled', true);
-
+  //  $('form fieldset').attr('disabled', true);
+   
     //JGC_01192017 : Disabled Activate Button
     if ($('#gsc_paymentmode').val() == "100000001" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == "")
            || ($('#gsc_financingschemeid').val() == null || $('#gsc_financingschemeid').val() == "")
@@ -250,7 +250,7 @@ $(document).ready(function () {
                 setTimeout(RedirecttoSalesOrder(), 1000);
             }
         }).error(function (errormsg) { console.log(errormsg) });
-    });
+});
 
     function RedirecttoSalesOrder() {
         var host = window.location.host;
