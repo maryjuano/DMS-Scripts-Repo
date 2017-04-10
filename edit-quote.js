@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    //TEST Commit Tom
+    //TEST Commit Tom, Jerome
     $('form fieldset').attr('disabled', true);
    
     //JGC_01192017 : Disabled Activate Button
