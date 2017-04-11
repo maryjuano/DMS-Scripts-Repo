@@ -1,8 +1,7 @@
 $(document).ready(function () {
-    //TEST Commit Tom, Jerome, Jek
     $('form fieldset').attr('disabled', true);
-   
-    //JGC_01192017 : Disabled Activate Button
+    
+   //JGC_01192017 : Disabled Activate Button
     if ($('#gsc_paymentmode').val() == "100000001" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == "")
            || ($('#gsc_financingschemeid').val() == null || $('#gsc_financingschemeid').val() == "")
            || ($('#gsc_downpaymentamount').val() == "" || $('#gsc_downpaymentpercentage').val() == "") || ($('#gsc_netmonthlyamortization').html() == "" || $('#gsc_netmonthlyamortization').html() == "₱0.00"))) {
@@ -16,20 +15,21 @@ $(document).ready(function () {
 
     if (vehicleModel == "" || color1 == "" || paymentMode == "") {
         $(".activate-quote-link").addClass("permanent-disabled disabled");
+        
     }
 
     //Added by: JGC_12092016
     var Userposition = DMS.Settings.User.positionName;
     
     /*Start - Revised by Christell Ann Mataac - 3/15/17 */
-    if (Userposition != 'System Administrator' && Userposition != 'Branch Administrator' && Userposition != 'Sales Executive' && Userposition != 'Sales Supervisor' && Userposition != 'Sales Lead' && Userposition != 'Sales Manager' && Userposition != 'MMPC System Admin' && Userposition != 'MMPC System Administrator') 
+    /*if (Userposition != 'System Administrator' && Userposition != 'Branch Administrator' && Userposition != 'Sales Executive' && Userposition != 'Sales Supervisor' && Userposition != 'Sales Lead' && Userposition != 'Sales Manager' && Userposition != 'MMPC System Admin' && Userposition != 'MMPC System Administrator') 
     {
         $(".nav.nav-tabs li:eq(3)").hide();
         $("#gsc_totalpremium").prop("readonly", true);
         $('#gsc_rate_label').closest('td').addClass("hidden");
         $('#gsc_cost_label').closest('td').addClass("hidden");
         $('#gsc_originaltotalpremium_label').closest('td').addClass("hidden");
-    }
+    }*/
     /*End - Revised by Christell Ann Mataac - 3/15/17 */
     
     
@@ -43,7 +43,7 @@ $(document).ready(function () {
     $('#MonthlyAmortization').html('');
     //End
 
-    function DisableTotalPremium() {
+   /* function DisableTotalPremium() {
         if ($("#gsc_free").prop("checked")) {
             $("#gsc_totalpremium").prop("readonly", true);
         }
@@ -63,7 +63,7 @@ $(document).ready(function () {
 
     $("#gsc_free").change(function () {
         DisableTotalPremium();
-    });
+    }); */
 
     $(document).trigger("initializeEditableGrid", AccessroiessGridInstance);
     $(document).trigger("initializeEditableGrid", CabChasisGridInstance);
@@ -417,7 +417,106 @@ $(document).ready(function () {
                 return pair[1];
             }
         }
-    }    
+    }
+
+	//Added JGC_04102017 : Enhancement Of Insurance Tab
+	  $("#gsc_totalinsurancecharges").attr('disabled', true);
+	  $("#gsc_totalpremium").on('change', function () {
+	    var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
+	    var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+	  });
+	  $("#gsc_ctpl").on('change', function () {
+	    var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
+	    var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+	  });
+	  
+	 //set page validators
+    if (typeof (Page_Validators) == 'undefined') return;
+    var totalPremiumValidator = document.createElement('span');
+    totalPremiumValidator.style.display = "none";
+    totalPremiumValidator.id = "RequiredFieldValidatorgsc_totalpremium";
+    totalPremiumValidator.controltovalidate = "gsc_totalpremium";
+    totalPremiumValidator.errormessage = "<a href='#gsc_totalpremium'>Total Premium is a required field</a>";
+    totalPremiumValidator.validationGroup = "";
+    totalPremiumValidator.initialvalue = "";
+    totalPremiumValidator.evaluationfunction = function () {
+        var value = $("#gsc_totalpremium").val();
+        if (value == null || value == "") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    
+    var insuranceCoverageValidator = document.createElement('span');
+    insuranceCoverageValidator.style.display = "none";
+    insuranceCoverageValidator.id = "RequiredFieldValidatorgsc_insurancecoverage";
+    insuranceCoverageValidator.controltovalidate = "gsc_insurancecoverage";
+    insuranceCoverageValidator.errormessage = "<a href='#gsc_insurancecoverage'>Insurance Coverage is a required field</a>";
+    insuranceCoverageValidator.validationGroup = "";
+    insuranceCoverageValidator.initialvalue = "";
+    insuranceCoverageValidator.evaluationfunction = function () {
+        var value = $("#gsc_insurancecoverage").val();
+        if (value == null || value == "") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    
+	   var insuranceCoverage = $("#gsc_insurancecoverage").val();
+	   var provider = $("#gsc_provider").val();
+	   
+	   if(provider != "")
+	   {
+	    Page_Validators.push(insuranceCoverageValidator);
+	    $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+	   }
+	   
+		if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
+		{
+	    Page_Validators.push(totalPremiumValidator);
+	    $('#gsc_totalpremium_label').parent("div").addClass("required");
+		}
+			
+	 setTimeout(function () {
+      $("#gsc_insurancecoverage").on('change', function () {
+      var insuranceCoverage = $("#gsc_insurancecoverage").val();
+			if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
+			{
+				Page_Validators.push(totalPremiumValidator);
+				$('#gsc_totalpremium_label').parent("div").addClass("required");
+			}
+			else
+			{
+				$('#gsc_totalpremium_label').parent("div").removeClass("required");
+				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != totalPremiumValidator;
+            });
+			}
+        });
+    
+    $("#gsc_provider").on('change', function () {
+      var provider = $("#gsc_provider").val();
+			if(provider != "")
+			{
+				Page_Validators.push(insuranceCoverageValidator);
+				$('#gsc_insurancecoverage_label').parent("div").addClass("required");
+			}
+			else
+			{
+				$('#gsc_insurancecoverage_label').parent("div").removeClass("required");
+				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != insuranceCoverageValidator;
+            });
+			}
+        });
+    
+    
+    }, 100);
+	//End
 
 });
 
