@@ -378,15 +378,13 @@ $(document).ready(function (e) {
 
         $("#gsc_downpaymentpercentage").on('change', function () {
             computeDownpaymentAmount();
+        });
 
         $('#gsc_netdownpayment').on('change', function () {
             computeAmountFinanced();
         });
-
         $("#gsc_amountfinanced").on('change', function () {
             computeNetAmountFinanced();
-        });
-
         });
 
     }, 300);
