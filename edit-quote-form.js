@@ -3,6 +3,7 @@ $(document).ready(function (e) {
       $("#gsc_lessdiscount").closest("td").height(57);
 
     //for custom filtering of views
+	
     setTimeout(function () {
      
         $("#gsc_portaluserid").val(userId);
