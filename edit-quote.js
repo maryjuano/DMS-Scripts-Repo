@@ -328,10 +328,11 @@ $(document).ready(function () {
     //Close Quote - Created By : Jerome Anthony Gerero, Created On : 10/3/2016
     $closeButton = DMS.Helpers.CreateAnchorButton("btn-primary btn", '', ' CLOSE QUOTE', DMS.Helpers.CreateFontAwesomeIcon('fa-ban'));
 
-    //Added by Ernest Sarmiento 02-21-2017
-    if ($(".record-status").html() != "Draft") {
-        $closeButton.addClass('hidden');
-    }
+    //Added by Ernest Sarmiento 02-21-2017 
+    //Commented by Artum Ramos 04-12-2017
+    //if ($(".record-status").html() != "Draft") {
+    //    $closeButton.addClass('hidden');
+    //}
 
     var closeModalBody = '<center><p>This Quote will be closed. Please provide a reason for closing : </p>' +
     '<div id="closeRemarksDiv"><textarea id="closeRemarks" style="height: 100px;" rows="2" cols="40"></textarea></center></div>' +
