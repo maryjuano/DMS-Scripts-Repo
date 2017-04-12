@@ -370,7 +370,6 @@ $(document).ready(function (e) {
         }
     }
 
-
     setTimeout(function () {
 
         $("#gsc_downpaymentamount").on('change', function () {
@@ -380,12 +379,13 @@ $(document).ready(function (e) {
         $("#gsc_downpaymentpercentage").on('change', function () {
             computeDownpaymentAmount();
 
-            $('#gsc_netdownpayment').on('change', function () {
-                computeAmountFinanced(additional, unitprice);
-            });
-            $("#gsc_amountfinanced").on('change', function () {
-                computeNetAmountFinanced();
-            });
+        $('#gsc_netdownpayment').on('change', function () {
+            computeAmountFinanced();
+        });
+
+        $("#gsc_amountfinanced").on('change', function () {
+            computeNetAmountFinanced();
+        });
 
         });
 
@@ -445,7 +445,7 @@ $(document).ready(function (e) {
     }
 
     //compute amount financed = unitprice + additional price - netdownpayment
-    function computeAmountFinanced(additional) {
+    function computeAmountFinanced() {
         netPrice = parseFloat($('#gsc_netprice').html().substr(1).replace(/,/g, ""));
         //netdownpayment = $("#gsc_netdownpayment").val() == "" ? 0 : $("#gsc_netdownpayment").val().replace(/,/g, "");
         grossDownpayment = $("#gsc_downpaymentamount").val() == "" ? 0 : $("#gsc_downpaymentamount").val().replace(/,/g, "");
