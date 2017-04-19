@@ -465,7 +465,7 @@ var accessoriesSelectData = DMS.Helpers.GetOptionListSet('/_odata/vehicleaccesso
 
 var AccessroiessGridInstance = {
     initialize: function () {
-        $('<div id="accessories-editablegrid" class="editable-grid"></div>').appendTo('.content-wrapper');
+        $('<div id="accessories-editablegrid" class="editable-grid hidden"></div>').appendTo('.content-wrapper');
 
         var $container = document.getElementById('accessories-editablegrid');
         var idQueryString = DMS.Helpers.GetUrlQueryString('id');

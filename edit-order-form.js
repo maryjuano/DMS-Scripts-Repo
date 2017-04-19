@@ -351,7 +351,7 @@ $(document).ready(function (e) {
             applytoafprcntfield.prop('readonly', true);   
           
             schemeidfield.siblings('.input-group-btn').addClass('hidden');
-
+               $('#gsc_bankid_label').parent("div").addClass('required');
           
             $('#gsc_financingschemeid_label').parent("div").removeClass("required");
          

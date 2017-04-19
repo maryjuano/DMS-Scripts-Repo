@@ -343,7 +343,7 @@ $(document).ready(function (e) {
         }
         else if (paymentmode == '100000002') {
 
-                 dpDiscountfield.attr('readonly', true);
+            dpDiscountfield.attr('readonly', true);
             afDiscountfield.attr('readonly', true);
             chattelFeefield.attr('readonly', true);
             applytoafamntfield.attr('readonly', true);
@@ -352,13 +352,16 @@ $(document).ready(function (e) {
           
             schemeidfield.siblings('.input-group-btn').addClass('hidden');
 
-            
+            $('#gsc_bankid_label').parent("div").addClass('required');          
             $('#gsc_financingschemeid_label').parent("div").removeClass("required");        
 
             // Remove the new validator to the page validators array:          
             Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != schemeValidator;
             });      
+
+            // Add Validator
+               Page_Validators.push(bankValidator);
 
             if (action == "onchange") {
                 //Clear then set values
