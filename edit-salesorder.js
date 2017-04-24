@@ -421,10 +421,10 @@ $(document).ready(function () {
         event.preventDefault();
     }
 
-    if (DMS.Settings.User.positionName == 'Sales Executive') {
+    /*if (DMS.Settings.User.positionName == 'Sales Executive') {
         $('#gsc_originaltotalpremium_label').hide();
         $('#gsc_originaltotalpremium').hide();
-    }
+    }*/
 
     function showLoading() {
         $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
@@ -437,6 +437,160 @@ $(document).ready(function () {
         div.appendChild(span);
         $(".content-wrapper").append(div);
     }
+	
+	 $('.text.money').mask("#,##0.00", {reverse: true});
+	
+	//Added JGC_04102017 : Enhancement Of Insurance Tab
+	  $("#gsc_totalpremium").on('change', function () {
+	    var totalpremium = 0;
+	    var ctpl = 0;
+	    if ($("#gsc_totalpremium").val() != "") 
+	      totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+	    if($("#gsc_ctpl").val() != "")
+        ctpl = parseFloat($("#gsc_ctpl").cleanVal());
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+      maskTotalInsuranceCharge();
+	  });
+	  $("#gsc_ctpl").on('change', function () {
+	    var totalpremium = 0;
+	    var ctpl = 0;
+	    if ($("#gsc_totalpremium").val() != "") 
+	      totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+	    if($("#gsc_ctpl").val() != "")
+        ctpl = parseFloat($("#gsc_ctpl").cleanVal());
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+	    maskTotalInsuranceCharge();
+	  });
+	  function maskTotalInsuranceCharge() {
+	    $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
+	  }
+	  
+	 //set page validators
+    if (typeof (Page_Validators) == 'undefined') return;
+    var totalPremiumValidator = document.createElement('span');
+    totalPremiumValidator.style.display = "none";
+    totalPremiumValidator.id = "RequiredFieldValidatorgsc_totalpremium";
+    totalPremiumValidator.controltovalidate = "gsc_totalpremium";
+    totalPremiumValidator.errormessage = "<a href='#gsc_totalpremium'>Total Premium is a required field</a>";
+    totalPremiumValidator.validationGroup = "";
+    totalPremiumValidator.initialvalue = "";
+    totalPremiumValidator.evaluationfunction = function () {
+        var value = $("#gsc_totalpremium").val();
+        if (value == null || value == "") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    
+    var insuranceCoverageValidator = document.createElement('span');
+    insuranceCoverageValidator.style.display = "none";
+    insuranceCoverageValidator.id = "RequiredFieldValidatorgsc_insurancecoverage";
+    insuranceCoverageValidator.controltovalidate = "gsc_insurancecoverage";
+    insuranceCoverageValidator.errormessage = "<a href='#gsc_insurancecoverage'>Insurance Coverage is a required field</a>";
+    insuranceCoverageValidator.validationGroup = "";
+    insuranceCoverageValidator.initialvalue = "";
+    insuranceCoverageValidator.evaluationfunction = function () {
+        var value = $("#gsc_insurancecoverage").val();
+        if (value == null || value == "") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    
+	   var insuranceCoverage = $("#gsc_insurancecoverage").val();
+	   var provider = $("#gsc_providercompanyid").val();
+	   
+	   if(provider != "")
+	   {
+	    Page_Validators.push(insuranceCoverageValidator);
+	    $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+	   }
+	   
+		if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
+		{
+	    Page_Validators.push(totalPremiumValidator);
+	    $('#gsc_totalpremium_label').parent("div").addClass("required");
+		}
+			
+	 setTimeout(function () {
+      $("#gsc_insurancecoverage").on('change', function () {
+      var insuranceCoverage = $("#gsc_insurancecoverage").val();
+			if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
+			{
+				Page_Validators.push(totalPremiumValidator);
+				$('#gsc_totalpremium_label').parent("div").addClass("required");
+			}
+			else
+			{
+				$('#gsc_totalpremium_label').parent("div").removeClass("required");
+				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != totalPremiumValidator;
+            });
+			}
+        });
+    
+    $("#gsc_providercompanyid").on('change', function () {
+      var provider = $("#gsc_providercompanyid").val();
+			if(provider != "")
+			{
+				Page_Validators.push(insuranceCoverageValidator);
+				$('#gsc_insurancecoverage_label').parent("div").addClass("required");
+			}
+			else
+			{
+				$('#gsc_insurancecoverage_label').parent("div").removeClass("required");
+				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != insuranceCoverageValidator;
+            });
+			}
+        });
+    }, 100);
+    
+    //Added By: Jerome Anthony Gerero
+    //Purpose : Hide Cab Chassis Subgrid
+    setTimeout(function () {
+      var productId = $('#gsc_productid').val();
+      
+      if (productId == null) {
+        productId = '00000000-0000-0000-0000-000000000000';
+      }
+      var productOdataUrl = "/_odata/vehicleanditemcatalog?$filter=productid eq (Guid'" + productId + "')";
+      
+      $.ajax({
+        type: 'get',
+        async: true,
+        url: productOdataUrl,
+        success: function (data) {
+          var bodyType = data.value[0].gsc_bodytypeid;
+          
+          if(bodyType != null) {
+            var bodyTypeOdataUrl = "/_odata/bodytype?$filter=gsc_sls_bodytypeid eq (Guid'" + bodyType.Id + "')";
+            $.ajax({
+              type: 'get',
+              async: true,
+              url: bodyTypeOdataUrl,
+              success: function (data){
+                var isCabChassis = data.value[0].gsc_cabchassis;
+                
+                if (isCabChassis == false) {
+                  $('[data-name="CABCHASSIS"').parent().hide();
+                }
+              },
+              error: function (xhr, textStatus, errorMessage){
+                console.log(errorMessage);
+              }
+            });
+          }
+        },
+        error: function (xhr, textStatus, errorMessage){
+          console.log(errorMessage);
+        }
+      });
+    }, 1000);
+    
+    //End	
 });
 
 
@@ -466,7 +620,7 @@ var accessoriesSelectData = DMS.Helpers.GetOptionListSet('/_odata/vehicleaccesso
 var AccessroiessGridInstance = {
     initialize: function () {
         $('<div id="accessories-editablegrid" class="editable-grid hidden"></div>').appendTo('.content-wrapper');
-
+     
         var $container = document.getElementById('accessories-editablegrid');
         var idQueryString = DMS.Helpers.GetUrlQueryString('id');
         var odataQuery = '/_odata/gsc_sls_orderaccessory?$filter=gsc_orderid/Id%20eq%20(Guid%27' + idQueryString + '%27)';
@@ -554,7 +708,7 @@ var cabChassisSelectData = DMS.Helpers.GetOptionListSet('/_odata/gsc_sls_vehicle
 
 var CabChasisGridInstance = {
     initialize: function () {
-        $('<div id="cabchassis-editablegrid" class="editable-grid"></div>').appendTo('.content-wrapper');
+        $('<div id="cabchassis-editablegrid" class="editable-grid hidden"></div>').appendTo('.content-wrapper');
 
         var $container = document.getElementById('cabchassis-editablegrid');
         var idQueryString = DMS.Helpers.GetUrlQueryString('id');
