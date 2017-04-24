@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('form fieldset').attr('disabled', true);
-    
-   //JGC_01192017 : Disabled Activate Button
+
+    //JGC_01192017 : Disabled Activate Button
     if ($('#gsc_paymentmode').val() == "100000001" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == "")
            || ($('#gsc_financingschemeid').val() == null || $('#gsc_financingschemeid').val() == "")
            || ($('#gsc_downpaymentamount').val() == "" || $('#gsc_downpaymentpercentage').val() == "") || ($('#gsc_netmonthlyamortization').html() == "" || $('#gsc_netmonthlyamortization').html() == "₱0.00"))) {
@@ -15,12 +15,12 @@ $(document).ready(function () {
 
     if (vehicleModel == "" || color1 == "" || paymentMode == "") {
         $(".activate-quote-link").addClass("permanent-disabled disabled");
-        
+
     }
 
     //Added by: JGC_12092016
     var Userposition = DMS.Settings.User.positionName;
-    
+
     /*Start - Revised by Christell Ann Mataac - 3/15/17 */
     /*if (Userposition != 'System Administrator' && Userposition != 'Branch Administrator' && Userposition != 'Sales Executive' && Userposition != 'Sales Supervisor' && Userposition != 'Sales Lead' && Userposition != 'Sales Manager' && Userposition != 'MMPC System Admin' && Userposition != 'MMPC System Administrator') 
     {
@@ -31,8 +31,8 @@ $(document).ready(function () {
         $('#gsc_originaltotalpremium_label').closest('td').addClass("hidden");
     }*/
     /*End - Revised by Christell Ann Mataac - 3/15/17 */
-    
-    
+
+
     if (typeof (Page_ClientValidate) == 'function') {
     }
 
@@ -43,27 +43,27 @@ $(document).ready(function () {
     $('#MonthlyAmortization').html('');
     //End
 
-   /* function DisableTotalPremium() {
-        if ($("#gsc_free").prop("checked")) {
-            $("#gsc_totalpremium").prop("readonly", true);
-        }
-        else {
-            if (Userposition == 'Sales Manager' || Userposition == 'System Administrator') {
-                var originalPremium = $("#gsc_originaltotalpremium").val();
-                if (originalPremium == "" || originalPremium == 0) {
-                    $("#gsc_totalpremium").prop("readonly", true);
-                } else {
-                    $("#gsc_totalpremium").prop("readonly", false);
-                }
-            }
-        }
-    }
-
-    DisableTotalPremium();
-
-    $("#gsc_free").change(function () {
-        DisableTotalPremium();
-    }); */
+    /* function DisableTotalPremium() {
+         if ($("#gsc_free").prop("checked")) {
+             $("#gsc_totalpremium").prop("readonly", true);
+         }
+         else {
+             if (Userposition == 'Sales Manager' || Userposition == 'System Administrator') {
+                 var originalPremium = $("#gsc_originaltotalpremium").val();
+                 if (originalPremium == "" || originalPremium == 0) {
+                     $("#gsc_totalpremium").prop("readonly", true);
+                 } else {
+                     $("#gsc_totalpremium").prop("readonly", false);
+                 }
+             }
+         }
+     }
+ 
+     DisableTotalPremium();
+ 
+     $("#gsc_free").change(function () {
+         DisableTotalPremium();
+     }); */
 
     $(document).trigger("initializeEditableGrid", AccessroiessGridInstance);
     $(document).trigger("initializeEditableGrid", CabChasisGridInstance);
@@ -225,7 +225,7 @@ $(document).ready(function () {
         else {
             workflowName = 'Quote Won - Do Not Close Opportunity';
         }
-        
+
         showLoading();
 
         $.ajax({
@@ -243,7 +243,7 @@ $(document).ready(function () {
                 setTimeout(RedirecttoSalesOrder(), 1000);
             }
         }).error(function (errormsg) { console.log(errormsg) });
-});
+    });
 
     function RedirecttoSalesOrder() {
         var host = window.location.host;
@@ -324,7 +324,7 @@ $(document).ready(function () {
     '<input type="radio" name="closeOpportunity" value="0" checked="checked"> Do not update Opportunity';
 
     var $closeConfirmation = DMS.Helpers.CreateModalConfirmation({ id: 'closeQuoteModal', headerTitle: 'Close Quote', Body: closeModalBody });
-
+    $closeConfirmation.find('.confirmModal').attr("data-dismiss", "modal");
     $('.crmEntityFormView').append($closeConfirmation);
 
     $closeButton.click(function (evt) {
@@ -341,14 +341,14 @@ $(document).ready(function () {
                 $('#UpdateButton').click();
             }
             else if (stateCode == "Active") {
-                var workflowName = "";
-
-                if (closeOpportunityValue == 1)
-                    workflowName = 'Quote Won - Close Opportunity';
-                else
-                    workflowName = 'Quote Won - Do Not Close Opportunity';
-
-                callCloseQuoteWorkflow(workflowName);
+                /* var workflowName = "";
+ 
+                 if (closeOpportunityValue == 1)
+                     workflowName = 'Quote Won - Close Opportunity';
+                 else
+                     workflowName = 'Quote Won - Do Not Close Opportunity';
+ 
+                 callCloseQuoteWorkflow(workflowName);*/
             }
         });
 
@@ -416,20 +416,20 @@ $(document).ready(function () {
         }
     }
 
-	//Added JGC_04102017 : Enhancement Of Insurance Tab
-	  $("#gsc_totalinsurancecharges").attr('disabled', true);
-	  $("#gsc_totalpremium").on('change', function () {
-	    var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
-	    var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-	  });
-	  $("#gsc_ctpl").on('change', function () {
-	    var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
-	    var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-	  });
-	  
-	 //set page validators
+    //Added JGC_04102017 : Enhancement Of Insurance Tab
+    $("#gsc_totalinsurancecharges").attr('disabled', true);
+    $("#gsc_totalpremium").on('change', function () {
+        var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
+        var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+    });
+    $("#gsc_ctpl").on('change', function () {
+        var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
+        var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+    });
+
+    //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
     var totalPremiumValidator = document.createElement('span');
     totalPremiumValidator.style.display = "none";
@@ -446,7 +446,7 @@ $(document).ready(function () {
             return true;
         }
     };
-    
+
     var insuranceCoverageValidator = document.createElement('span');
     insuranceCoverageValidator.style.display = "none";
     insuranceCoverageValidator.id = "RequiredFieldValidatorgsc_insurancecoverage";
@@ -462,92 +462,87 @@ $(document).ready(function () {
             return true;
         }
     };
-    
-	   var insuranceCoverage = $("#gsc_insurancecoverage").val();
-	   var provider = $("#gsc_provider").val();
-	   
-	   if(provider != "")
-	   {
-	    Page_Validators.push(insuranceCoverageValidator);
-	    $('#gsc_insurancecoverage_label').parent("div").addClass("required");
-	   }
-	   
-		if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
-		{
-	    Page_Validators.push(totalPremiumValidator);
-	    $('#gsc_totalpremium_label').parent("div").addClass("required");
-		}
-			
-	 setTimeout(function () {
-      $("#gsc_insurancecoverage").on('change', function () {
-      var insuranceCoverage = $("#gsc_insurancecoverage").val();
-			if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
-			{
-				Page_Validators.push(totalPremiumValidator);
-				$('#gsc_totalpremium_label').parent("div").addClass("required");
-			}
-			else
-			{
-				$('#gsc_totalpremium_label').parent("div").removeClass("required");
-				Page_Validators = jQuery.grep(Page_Validators, function (value) {
-                return value != totalPremiumValidator;
-            });
-			}
+
+    var insuranceCoverage = $("#gsc_insurancecoverage").val();
+    var provider = $("#gsc_provider").val();
+
+    if (provider != "") {
+        Page_Validators.push(insuranceCoverageValidator);
+        $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+    }
+
+    if (insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
+    {
+        Page_Validators.push(totalPremiumValidator);
+        $('#gsc_totalpremium_label').parent("div").addClass("required");
+    }
+
+    setTimeout(function () {
+        $("#gsc_insurancecoverage").on('change', function () {
+            var insuranceCoverage = $("#gsc_insurancecoverage").val();
+            if (insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
+            {
+                Page_Validators.push(totalPremiumValidator);
+                $('#gsc_totalpremium_label').parent("div").addClass("required");
+            }
+            else {
+                $('#gsc_totalpremium_label').parent("div").removeClass("required");
+                Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                    return value != totalPremiumValidator;
+                });
+            }
         });
-    
-    $("#gsc_provider").on('change', function () {
-      var provider = $("#gsc_provider").val();
-			if(provider != "")
-			{
-				Page_Validators.push(insuranceCoverageValidator);
-				$('#gsc_insurancecoverage_label').parent("div").addClass("required");
-			}
-			else
-			{
-				$('#gsc_insurancecoverage_label').parent("div").removeClass("required");
-				Page_Validators = jQuery.grep(Page_Validators, function (value) {
-                return value != insuranceCoverageValidator;
-            });
-			}
+
+        $("#gsc_provider").on('change', function () {
+            var provider = $("#gsc_provider").val();
+            if (provider != "") {
+                Page_Validators.push(insuranceCoverageValidator);
+                $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+            }
+            else {
+                $('#gsc_insurancecoverage_label').parent("div").removeClass("required");
+                Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                    return value != insuranceCoverageValidator;
+                });
+            }
         });
-    
-    
+
+
     }, 100);
     //End
 
-	 function callCloseQuoteWorkflow(workflowName){
-	     showLoading();
-	     var entityId = getQueryVariable("id");
+    function callCloseQuoteWorkflow(workflowName) {
+        showLoading();
+        var entityId = getQueryVariable("id");
 
-	     $.ajax({
-	         type: "PUT",
-	         url: "/api/Service/RunWorkFlow/?workflowName=" + workflowName + "&entityId=" + entityId,
-	         success: function (response) {
-	             var url = document.location.protocol + '//' +
-                     document.location.host + (document.location.host.indexOf("demo.adxstudio.com") != -1
-                         ? document.location.pathname.split("/").slice(0, 3).join("/")
-                         : "") + '/Cache.axd?Message=InvalidateAll&d=' +
-                     (new Date()).valueOf();
-	             var req = new XMLHttpRequest();
-	             req.open('GET', url, false);
-	             req.send(null); 
-	             window.location.reload(true);
-	         }
-	     }).error(function (errormsg) { console.log(errormsg) });
-	 }
+        $.ajax({
+            type: "PUT",
+            url: "/api/Service/RunWorkFlow/?workflowName=" + workflowName + "&entityId=" + entityId,
+            success: function (response) {
+                var url = document.location.protocol + '//' +
+                    document.location.host + (document.location.host.indexOf("demo.adxstudio.com") != -1
+                        ? document.location.pathname.split("/").slice(0, 3).join("/")
+                        : "") + '/Cache.axd?Message=InvalidateAll&d=' +
+                    (new Date()).valueOf();
+                var req = new XMLHttpRequest();
+                req.open('GET', url, false);
+                req.send(null);
+                window.location.reload(true);
+            }
+        }).error(function (errormsg) { console.log(errormsg) });
+    }
 
-	function showLoading()
-	{
-	     $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
+    function showLoading() {
+        $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
 
-	     var div = document.createElement("DIV");
-	     div.className = "view-loading message text-center";
-	     div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
-	     var span = document.createElement("SPAN");
-	     span.className = "fa fa-2x fa-spinner fa-spin";
-	     div.appendChild(span);
-	     $(".content-wrapper").append(div);
-	 }
+        var div = document.createElement("DIV");
+        div.className = "view-loading message text-center";
+        div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
+        var span = document.createElement("SPAN");
+        span.className = "fa fa-2x fa-spinner fa-spin";
+        div.appendChild(span);
+        $(".content-wrapper").append(div);
+    }
 
 });
 
