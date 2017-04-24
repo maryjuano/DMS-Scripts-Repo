@@ -517,6 +517,7 @@ $(document).ready(function () {
 
 	 function callCloseQuoteWorkflow(workflowName){
 	     showLoading();
+	     var entityId = getQueryVariable("id");
 
 	     $.ajax({
 	         type: "PUT",
