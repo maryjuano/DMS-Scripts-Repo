@@ -225,16 +225,8 @@ $(document).ready(function () {
         else {
             workflowName = 'Quote Won - Do Not Close Opportunity';
         }
-
-        $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
-
-        var div = document.createElement("DIV");
-        div.className = "view-loading message text-center";
-        div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
-        var span = document.createElement("SPAN");
-        span.className = "fa fa-2x fa-spinner fa-spin";
-        div.appendChild(span);
-        $(".content-wrapper").append(div);
+        
+        showLoading();
 
         $.ajax({
             type: "PUT",
@@ -286,15 +278,7 @@ $(document).ready(function () {
     if (stateCode === "Active" || stateCode == "Closed") {
         $btnRevise = DMS.Helpers.CreateAnchorButton("btn-primary btn", '', ' REVISE', DMS.Helpers.CreateFontAwesomeIcon('fa-pencil-square-o'));
         $btnRevise.click(function (evt) {
-            $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
-
-            var div = document.createElement("DIV");
-            div.className = "view-loading message text-center";
-            div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
-            var span = document.createElement("SPAN");
-            span.className = "fa fa-2x fa-spinner fa-spin";
-            div.appendChild(span);
-            $(".content-wrapper").append(div);
+            showLoading();
 
             var entityId = getQueryVariable("id");
             var workflowName = "Sales Quote - Reactivation";
@@ -348,12 +332,24 @@ $(document).ready(function () {
             var closeOpportunityValue = $('input[name="closeOpportunity"]:checked').val();
             var closeRemarksValue = $('#closeRemarks').val();
 
-            if (closeOpportunityValue == 1) $('#gsc_closeopportunity').prop('checked', true);
-            else $('#gsc_closeopportunity').prop('checked', false);
-            $('#gsc_closeremarks').val(closeRemarksValue);
-            $('#gsc_closequote').prop('checked', true);
+            if (stateCode == "Draft") {
+                if (closeOpportunityValue == 1) $('#gsc_closeopportunity').prop('checked', true);
+                else $('#gsc_closeopportunity').prop('checked', false);
+                $('#gsc_closeremarks').val(closeRemarksValue);
+                $('#gsc_closequote').prop('checked', true);
 
-            $('#UpdateButton').click();
+                $('#UpdateButton').click();
+            }
+            else if (stateCode == "Active") {
+                var workflowName = "";
+
+                if (closeOpportunityValue == 1)
+                    workflowName = 'Quote Won - Close Opportunity';
+                else
+                    workflowName = 'Quote Won - Do Not Close Opportunity';
+
+                callCloseQuoteWorkflow(workflowName);
+            }
         });
 
         $closeConfirmation.modal('show');
@@ -517,7 +513,40 @@ $(document).ready(function () {
     
     
     }, 100);
-	//End
+    //End
+
+	 function callCloseQuoteWorkflow(workflowName){
+	     showLoading();
+
+	     $.ajax({
+	         type: "PUT",
+	         url: "/api/Service/RunWorkFlow/?workflowName=" + workflowName + "&entityId=" + entityId,
+	         success: function (response) {
+	             var url = document.location.protocol + '//' +
+                     document.location.host + (document.location.host.indexOf("demo.adxstudio.com") != -1
+                         ? document.location.pathname.split("/").slice(0, 3).join("/")
+                         : "") + '/Cache.axd?Message=InvalidateAll&d=' +
+                     (new Date()).valueOf();
+	             var req = new XMLHttpRequest();
+	             req.open('GET', url, false);
+	             req.send(null); 
+	             window.location.reload(true);
+	         }
+	     }).error(function (errormsg) { console.log(errormsg) });
+	 }
+
+	function showLoading()
+	{
+	     $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
+
+	     var div = document.createElement("DIV");
+	     div.className = "view-loading message text-center";
+	     div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
+	     var span = document.createElement("SPAN");
+	     span.className = "fa fa-2x fa-spinner fa-spin";
+	     div.appendChild(span);
+	     $(".content-wrapper").append(div);
+	 }
 
 });
 
