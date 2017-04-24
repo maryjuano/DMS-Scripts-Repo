@@ -400,6 +400,48 @@ $(document).ready(function () {
             }
         });
     }, 2000);
+	
+    //Added By: Jerome Anthony Gerero
+    //Purpose : Hide Cab Chassis Subgrid
+    setTimeout(function () {
+      var productId = $('#gsc_productid').val();
+      
+      if (productId == null) {
+        productId = '00000000-0000-0000-0000-000000000000';
+      }
+      var productOdataUrl = "/_odata/vehicleanditemcatalog?$filter=productid eq (Guid'" + productId + "')";
+      
+      $.ajax({
+        type: 'get',
+        async: true,
+        url: productOdataUrl,
+        success: function (data) {
+          var bodyType = data.value[0].gsc_bodytypeid;
+          
+          if(bodyType != null) {
+            var bodyTypeOdataUrl = "/_odata/bodytype?$filter=gsc_sls_bodytypeid eq (Guid'" + bodyType.Id + "')";
+            $.ajax({
+              type: 'get',
+              async: true,
+              url: bodyTypeOdataUrl,
+              success: function (data){
+                var isCabChassis = data.value[0].gsc_cabchassis;
+                
+                if (isCabChassis == false) {
+                  $('[data-name="CABCHASSIS"').parent().hide();
+                }
+              },
+              error: function (xhr, textStatus, errorMessage){
+                console.log(errorMessage);
+              }
+            });
+          }
+        },
+        error: function (xhr, textStatus, errorMessage){
+          console.log(errorMessage);
+        }
+      });
+    }, 1000);
 
     function preventDefault(event) {
         event.preventDefault();
