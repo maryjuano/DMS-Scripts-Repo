@@ -457,19 +457,31 @@ $(document).ready(function () {
             }
         }
     }
-
+    $('.text.money').mask("#,##0.00", {reverse: true});
     //Added JGC_04102017 : Enhancement Of Insurance Tab
-    $("#gsc_totalinsurancecharges").attr('disabled', true);
-    $("#gsc_totalpremium").on('change', function () {
-        var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
-        var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
-        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-    });
-    $("#gsc_ctpl").on('change', function () {
-        var totalpremium = parseFloat($("#gsc_totalpremium").val().replace(/,/g, ''));
-        var ctpl = parseFloat($("#gsc_ctpl").val().replace(/,/g, ''));
-        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-    });
+	  $("#gsc_totalpremium").on('change', function () {
+	    var totalpremium = 0;
+	    var ctpl = 0;
+	    if ($("#gsc_totalpremium").val() != "") 
+        totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+      if($("#gsc_ctpl").val() != "")   
+        ctpl = parseFloat($("#gsc_ctpl").cleanVal());
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+      maskTotalInsuranceCharge();
+	  });
+	  $("#gsc_ctpl").on('change', function () {
+	     var totalpremium = 0;
+	     var ctpl = 0;
+	     if ($("#gsc_totalpremium").val() != "") 
+        totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+       if($("#gsc_ctpl").val() != "") 
+        ctpl = parseFloat($("#gsc_ctpl").cleanVal());
+	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+	    maskTotalInsuranceCharge();
+	  });
+	  function maskTotalInsuranceCharge() {
+	    $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
+	  }
 
     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
