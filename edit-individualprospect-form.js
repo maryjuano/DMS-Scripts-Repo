@@ -133,4 +133,48 @@ $(document).ready(function () {
     };
 
     Page_Validators.push(mobilePhoneValidator);
+
+    var faxValidator = document.createElement('span');
+    faxValidator.style.display = "none";
+    faxValidator.id = "RequiredFieldValidatormobilephone";
+    faxValidator.controltovalidate = "fax";
+    faxValidator.errormessage = "<a href='#fax'>Fax should only contain numeric values.</a>";
+    faxValidator.validationGroup = "";
+    faxValidator.initialvalue = "";
+    faxValidator.evaluationfunction = function () {
+        var value = $("#fax").val();
+        var regex = /^[\d ()\-+]*$/;
+
+        var matches = value.match(regex);
+
+        if (matches != null) {
+            return true;
+        }
+        else
+            return false;
+    };
+
+    Page_Validators.push(faxValidator);
+
+    var alternatePhoneValidator = document.createElement('span');
+    alternatePhoneValidator.style.display = "none";
+    alternatePhoneValidator.id = "RequiredFieldValidatormobilephone";
+    alternatePhoneValidator.controltovalidate = "telephone1";
+    alternatePhoneValidator.errormessage = "<a href='#telephone1'>Mobile phone should only contain numeric values.</a>";
+    alternatePhoneValidator.validationGroup = "";
+    alternatePhoneValidator.initialvalue = "";
+    alternatePhoneValidator.evaluationfunction = function () {
+        var value = $("#telephone1").val();
+        var regex = /^[\d ()\-+]*$/;
+
+        var matches = value.match(regex);
+
+        if (matches != null) {
+            return true;
+        }
+        else
+            return false;
+    };
+
+    Page_Validators.push(alternatePhoneValidator);
 });
