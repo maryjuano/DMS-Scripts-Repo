@@ -4,6 +4,7 @@ $(document).ready(function () {
     if (status != "Open") {
         $('#EntityFormView fieldset:eq(12)').attr('disabled', true);
         $('#EntityFormView fieldset:eq(12)').addClass('permanent-disabled');
+        $('#gsc_disqualificationreason').attr('disabled', true);
     }
 
     if (typeof (Page_ClientValidate) == 'function') {
@@ -61,7 +62,6 @@ $(document).ready(function () {
 
         var entityId = getQueryVariable("id");
         var workflowName = "Prospect Inquiry - ReOpen";
-
         $.ajax({
             type: "PUT",
             url: "/api/Service/RunWorkFlow/?workflowName=" + workflowName + "&entityId=" + entityId,
@@ -71,11 +71,15 @@ $(document).ready(function () {
                     ? document.location.pathname.split("/").slice(0, 3).join("/")
                     : "") + '/Cache.axd?Message=InvalidateAll&d=' +
                     (new Date()).valueOf();
+                    
                 var req = new XMLHttpRequest();
                 req.open('GET', url, false);
-                req.send(null); window.location.reload(true);
+                req.send(null); 
+                window.location.reload(true);
             }
         }).error(function (errormsg) { console.log(errormsg) });
+        
+        
     });
 
     if (status == 'Disqualified') {
@@ -133,6 +137,7 @@ $(document).ready(function () {
 
         $("#gsc_disqualifyremarks").val(disqualifyRemarksValue);
         $("#gsc_disqualifiedstatusreason").val(selectedStatusReason);
+        $("#gsc_disqualificationreason").val(DisqualificationReason(selectedStatusReason, disqualifyRemarksValue));
         $('#gsc_disqualified_0').prop('checked', false);
         $('#gsc_disqualified_1').prop('checked', true);
         $("#UpdateButton").click();
@@ -183,13 +188,11 @@ $(document).ready(function () {
                     setTimeout(RedirecttoOpporunity(), 1000);
                 }
             });
-
         }
     });
 
     setTimeout(function () {
         $("#gsc_vehiclebasemodelid").on('change', function () {
-           
 
             if($("#gsc_vehiclebasemodelid").val()=="")
             {
@@ -251,4 +254,16 @@ $(document).ready(function () {
         }
     }
 
+    function DisqualificationReason(selectedStatusReason, disqualifyRemarksValue){
+        var disqualificationReasonText = $("#statusReason option:selected").text();
+        if (selectedStatusReason >= 4){
+            if(selectedStatusReason == 7 && disqualificationReasonText == "Others"){
+                return disqualificationReasonText + ": " + disqualifyRemarksValue;
+            }
+            return disqualificationReasonText;
+        }
+        else{
+            return null;
+        }
+    }
 });
