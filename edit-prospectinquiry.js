@@ -4,7 +4,12 @@ $(document).ready(function () {
     if (status != "Open") {
         $('#EntityFormView fieldset:eq(12)').attr('disabled', true);
         $('#EntityFormView fieldset:eq(12)').addClass('permanent-disabled');
-        $('#gsc_disqualificationreason').attr('disabled', true);
+    }
+
+    if (status != "Disqualified")
+    {
+        $('#gsc_disqualificationreason').hide();
+        $('#gsc_disqualificationreason_label').hide();
     }
 
     if (typeof (Page_ClientValidate) == 'function') {
@@ -254,6 +259,7 @@ $(document).ready(function () {
         }
     }
 
+    //Created By : Artum Ramos, Created On : 4/26/2017, 
     function DisqualificationReason(selectedStatusReason, disqualifyRemarksValue){
         var disqualificationReasonText = $("#statusReason option:selected").text();
         if (selectedStatusReason >= 4){
