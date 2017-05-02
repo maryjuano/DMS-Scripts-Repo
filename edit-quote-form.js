@@ -1,24 +1,19 @@
 $(document).ready(function (e) {
-      $('table[data-name="hideSection"]').closest('fieldset').hide();
-      $("#gsc_lessdiscount").closest("td").height(57);
+    $('table[data-name="hideSection"]').closest('fieldset').hide();
+    $("#gsc_lessdiscount").closest("td").height(57);
 
     //for custom filtering of views
     setTimeout(function () {
-     
+
         $("#gsc_portaluserid").val(userId);
-        //$.cookie("vehicleType", $("#gsc_vehicletype").val(), { path: '/' });
-        //$.cookie("vehicleUse", $("#gsc_vehicleuse").val(), { path: '/' });
         $.cookie("baseModel", $("#gsc_vehiclebasemodelid").val(), { path: '/' });
         $.cookie("productId", $("#gsc_productid").val(), { path: '/' });
 
-        /* $("#gsc_vehicletype").on('change', function () {
-            $.cookie("vehicleType", $("#gsc_vehicletype").val(), { path: '/' });
+        $('#gsc_validuntil').next('.datetimepicker').on("dp.change", function (e) {
+            $(this).data("DateTimePicker").setMinDate(new Date());
         });
 
-        $("#gsc_vehicleuse").on('change', function () {
-            $.cookie("vehicleUse", $("#gsc_vehicleuse").val(), { path: '/' });
-        });
-    }, 100); */
+    }, 100);
 
     //check quote status if open or not
     CheckStatus();
@@ -69,6 +64,26 @@ $(document).ready(function (e) {
 
     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
+
+    //Validator when valid until is not less than current date
+    var validUntilValidator = document.createElement('span');
+    validUntilValidator.style.display = "none";
+    validUntilValidator.id = "RequiredFieldValidatorvaliduntil";
+    validUntilValidator.errormessage = "Valid Until Date should not be less than the current date.";
+    validUntilValidator.validationGroup = "";
+    validUntilValidator.initialvalue = "";
+    validUntilValidator.evaluationfunction = function () {
+        var validDate = $("#gsc_validuntil").val() == "" ? 0 : $("#gsc_validuntil").val();
+        var currentDate = new Date();
+
+        if (new Date(validDate) >= new Date(currentDate.setHours(0, 0, 0, 0))) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    Page_Validators.push(validUntilValidator);
 
     //Validator when the discounts are not equal to 100%
     var discountValidator = document.createElement('span');
@@ -196,46 +211,46 @@ $(document).ready(function (e) {
     //End Insurance validators
 
     //Enable/disable insurance fields
-   /* setTimeout(function () {
-        $('#gsc_insuranceid').on('change', function () {
-            //insuranceOnChange();
-        });
-    }, 100 */
+    /* setTimeout(function () {
+         $('#gsc_insuranceid').on('change', function () {
+             //insuranceOnChange();
+         });
+     }, 100 */
 
     //Call insurance validator on form load
     //insuranceOnChange();
 
-   /* function insuranceOnChange() {
-        var cost = $('#gsc_cost');
-        var rate = $('#gsc_rate');
-
-        if ($('#gsc_insuranceid').val() != '') {
-            rate.attr('readonly', false);
-            cost.attr('readonly', false);
-
-            $('#gsc_rate_label').parent("div").addClass('required');
-            $('#gsc_cost_label').parent("div").addClass('required');
-
-            Page_Validators.push(rateValidator);
-            Page_Validators.push(costValidator);
-        } else {
-            rate.val(null);
-            cost.val(null);
-
-            rate.attr('readonly', true);
-            cost.attr('readonly', true);
-
-            $('#gsc_rate_label').parent("div").removeClass('required');
-            $('#gsc_cost_label').parent("div").removeClass('required');
-
-            Page_Validators = jQuery.grep(Page_Validators, function (value) {
-                return value != rateValidator;
-            });
-            Page_Validators = jQuery.grep(Page_Validators, function (value) {
-                return value != costValidator;
-            });
-        }
-    } */
+    /* function insuranceOnChange() {
+         var cost = $('#gsc_cost');
+         var rate = $('#gsc_rate');
+ 
+         if ($('#gsc_insuranceid').val() != '') {
+             rate.attr('readonly', false);
+             cost.attr('readonly', false);
+ 
+             $('#gsc_rate_label').parent("div").addClass('required');
+             $('#gsc_cost_label').parent("div").addClass('required');
+ 
+             Page_Validators.push(rateValidator);
+             Page_Validators.push(costValidator);
+         } else {
+             rate.val(null);
+             cost.val(null);
+ 
+             rate.attr('readonly', true);
+             cost.attr('readonly', true);
+ 
+             $('#gsc_rate_label').parent("div").removeClass('required');
+             $('#gsc_cost_label').parent("div").removeClass('required');
+ 
+             Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                 return value != rateValidator;
+             });
+             Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                 return value != costValidator;
+             });
+         }
+     } */
     //End enable/disable insurance fields
 
     //enable/disable fields according to payment mode selected
@@ -347,21 +362,21 @@ $(document).ready(function (e) {
             afDiscountfield.attr('readonly', true);
             chattelFeefield.attr('readonly', true);
             applytoafamntfield.attr('readonly', true);
-            applytoafprcntfield.attr('readonly', true);        
-             
-          
+            applytoafprcntfield.attr('readonly', true);
+
+
             schemeidfield.siblings('.input-group-btn').addClass('hidden');
 
-            $('#gsc_bankid_label').parent("div").addClass('required');          
-            $('#gsc_financingschemeid_label').parent("div").removeClass("required");        
+            $('#gsc_bankid_label').parent("div").addClass('required');
+            $('#gsc_financingschemeid_label').parent("div").removeClass("required");
 
             // Remove the new validator to the page validators array:          
             Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != schemeValidator;
-            });      
+            });
 
             // Add Validator
-               Page_Validators.push(bankValidator);
+            Page_Validators.push(bankValidator);
 
             if (action == "onchange") {
                 //Clear then set values
@@ -1005,7 +1020,7 @@ $(document).ready(function (e) {
     $("#gsc_applytouppercentage").attr("min", 0);
     $("#gsc_downpaymentamount").attr("min", 0);
     $("#gsc_downpaymentpercentage").attr("min", 0);
-    
+
     /* Added by: Christell Ann Mataac - 2/23/2017
   this will check duplicate preferred color */
     setTimeout(function () {
@@ -1039,32 +1054,30 @@ $(document).ready(function (e) {
             }
         });
     }, 100);
-    
-    setTimeout(function(){
-      /*Added: 3/17/2017 - Disable Add button in Discount and Charges Grid*/
-      if(DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead'  && userId != $('#gsc_recordownerid').val())
-        {
-            $('#tab-1-1').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true);            
+
+    setTimeout(function () {
+        /*Added: 3/17/2017 - Disable Add button in Discount and Charges Grid*/
+        if (DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead' && userId != $('#gsc_recordownerid').val()) {
+            $('#tab-1-1').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true);
             $('#tab-1-2').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true);
-            
-            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
+
+            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
         }
-        else if(DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead'  && userId == $('#gsc_recordownerid').val())
-        {
-          //remove disabled  button of the activate and print buttons
-          $('.btn-primary.btn.permanent-disabled.disabled').removeClass('disabled');
-          $('.activate-quote-link.btn.btn-primary.permanent-disabled.disabled').removeClass('disabled');
+        else if (DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead' && userId == $('#gsc_recordownerid').val()) {
+            //remove disabled  button of the activate and print buttons
+            $('.btn-primary.btn.permanent-disabled.disabled').removeClass('disabled');
+            $('.activate-quote-link.btn.btn-primary.permanent-disabled.disabled').removeClass('disabled');
         }
-      //END Added: 3/17/2017 - Disable Add button in Discount and Charges Grid
+        //END Added: 3/17/2017 - Disable Add button in Discount and Charges Grid
     }, 7000);
-    
+
     function checkPreferredColor(index) {
         var colorNum = index;
         var color1 = $('#gsc_vehiclecolorid1').val();
@@ -1134,6 +1147,4 @@ $(document).ready(function (e) {
             });
         }
     }
-     
-});
 });
