@@ -208,7 +208,7 @@ $(document).ready(function () {
                                         return alert('There are still active or draft quotes with the associated opportunity');
                                     }
                                     else if (quoteStateCode.Name == 'Won') {
-                                        return alert('There are won quotes associated with the opportunity. The opportunity must be manually updated from In-Progress to Won.');
+                                        return alert('There are won quotes associated with the opportunity. The opportunity must be manually updated from Draft to Won.');
                                     }
                                 }
                             }
