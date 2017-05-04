@@ -68,6 +68,7 @@ $(document).ready(function (e) {
     $('#gsc_netdownpayment').attr('readonly', true);
     $('#gsc_amountfinanced').attr('readonly', true);
     $('#gsc_netamountfinanced').attr('readonly', true);
+    var status = $(".record-status").html();
 
     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
@@ -89,8 +90,8 @@ $(document).ready(function (e) {
             return false;
         }
     };
-    
-    if (stateCode == 'Draft') {
+
+    if (status == 'Draft') {
         Page_Validators.push(validUntilValidator);
     }
 
