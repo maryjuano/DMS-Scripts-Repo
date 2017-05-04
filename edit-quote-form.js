@@ -25,8 +25,15 @@ $(document).ready(function (e) {
                 paymentModeOnChange("onload");
             }
             else if (stateCode == "Active") {
-                $('#SubmitButton').addClass("permanent-disabled disabled");
+                $('#SubmitButton').attr("disabled", true);
+                $('.delete-link').attr("disabled", true);
             }
+            else if (stateCode == "Closed" || stateCode == "Won") {
+				        $('#SubmitButton').attr("disabled", true);
+				        $('.delete-link').attr("disabled", true);
+				        $('#btnRecalculate').attr("disabled", true);
+				        $('.close-quote').attr("disabled", true);
+			      }
             else { }
 
             //check if there is an error in tax setup
@@ -676,7 +683,10 @@ $(document).ready(function (e) {
         });
 
         $('#gsc_netdownpayment').on('change', function () {
-            computeAmountFinanced(additional, netPrice);
+            console.log(downpayment);
+            if (paymentMode != '100000002' && downpayment != 0) {
+                computeAmountFinanced(additional, netPrice);
+            }
         });
         $("#gsc_amountfinanced").on('change', function () {
             computeNetAmountFinanced();
