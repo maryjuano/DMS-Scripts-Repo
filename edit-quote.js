@@ -275,7 +275,7 @@ $(document).ready(function () {
 
     //control visible here
     //Revise Button
-    if (stateCode === "Active" || stateCode == "Closed") {
+    if (stateCode === "Active") {
         $btnRevise = DMS.Helpers.CreateAnchorButton("btn-primary btn", '', ' REVISE', DMS.Helpers.CreateFontAwesomeIcon('fa-pencil-square-o'));
         $btnRevise.click(function (evt) {
             showLoading();
@@ -310,7 +310,7 @@ $(document).ready(function () {
     DMS.Helpers.AppendButtonToToolbar($btnRecalculate);
 
     //Close Quote - Created By : Jerome Anthony Gerero, Created On : 10/3/2016
-    $closeButton = DMS.Helpers.CreateAnchorButton("btn-primary btn", '', ' CLOSE QUOTE', DMS.Helpers.CreateFontAwesomeIcon('fa-ban'));
+    $closeButton = DMS.Helpers.CreateAnchorButton("close-quote btn-primary btn", '', ' CLOSE QUOTE', DMS.Helpers.CreateFontAwesomeIcon('fa-ban'));
 
     //Added by Ernest Sarmiento 02-21-2017 
     //Commented by Artum Ramos 04-12-2017
