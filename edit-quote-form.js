@@ -29,11 +29,11 @@ $(document).ready(function (e) {
                 $('.delete-link').attr("disabled", true);
             }
             else if (stateCode == "Closed" || stateCode == "Won") {
-				        $('#SubmitButton').attr("disabled", true);
-				        $('.delete-link').attr("disabled", true);
-				        $('#btnRecalculate').attr("disabled", true);
-				        $('.close-quote').attr("disabled", true);
-			      }
+                $('#SubmitButton').attr("disabled", true);
+                $('.delete-link').attr("disabled", true);
+                $('#btnRecalculate').attr("disabled", true);
+                $('.close-quote').attr("disabled", true);
+            }
             else { }
 
             //check if there is an error in tax setup
@@ -89,8 +89,10 @@ $(document).ready(function (e) {
             return false;
         }
     };
-
-    Page_Validators.push(validUntilValidator);
+    
+    if (stateCode == 'Draft') {
+        Page_Validators.push(validUntilValidator);
+    }
 
     //Validator when the discounts are not equal to 100%
     var discountValidator = document.createElement('span');
