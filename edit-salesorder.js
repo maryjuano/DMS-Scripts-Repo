@@ -437,35 +437,35 @@ $(document).ready(function () {
         div.appendChild(span);
         $(".content-wrapper").append(div);
     }
-	
-	 $('.text.money').mask("#,##0.00", {reverse: true});
-	
-	//Added JGC_04102017 : Enhancement Of Insurance Tab
-	  $("#gsc_totalpremium").on('change', function () {
-	    var totalpremium = 0;
-	    var ctpl = 0;
-	    if ($("#gsc_totalpremium").val() != "") 
-	      totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
-	    if($("#gsc_ctpl").val() != "")
+    
+     $('.text.money').mask("#,##0.00", {reverse: true});
+    
+    //Added JGC_04102017 : Enhancement Of Insurance Tab
+      $("#gsc_totalpremium").on('change', function () {
+        var totalpremium = 0;
+        var ctpl = 0;
+        if ($("#gsc_totalpremium").val() != "") 
+          totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+        if($("#gsc_ctpl").val() != "")
         ctpl = parseFloat($("#gsc_ctpl").cleanVal());
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
       maskTotalInsuranceCharge();
-	  });
-	  $("#gsc_ctpl").on('change', function () {
-	    var totalpremium = 0;
-	    var ctpl = 0;
-	    if ($("#gsc_totalpremium").val() != "") 
-	      totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
-	    if($("#gsc_ctpl").val() != "")
+      });
+      $("#gsc_ctpl").on('change', function () {
+        var totalpremium = 0;
+        var ctpl = 0;
+        if ($("#gsc_totalpremium").val() != "") 
+          totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
+        if($("#gsc_ctpl").val() != "")
         ctpl = parseFloat($("#gsc_ctpl").cleanVal());
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-	    maskTotalInsuranceCharge();
-	  });
-	  function maskTotalInsuranceCharge() {
-	    $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
-	  }
-	  
-	 //set page validators
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+        maskTotalInsuranceCharge();
+      });
+      function maskTotalInsuranceCharge() {
+        $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
+      }
+      
+     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
     var totalPremiumValidator = document.createElement('span');
     totalPremiumValidator.style.display = "none";
@@ -499,52 +499,52 @@ $(document).ready(function () {
         }
     };
     
-	   var insuranceCoverage = $("#gsc_insurancecoverage").val();
-	   var provider = $("#gsc_providercompanyid").val();
-	   
-	   if(provider != "")
-	   {
-	    Page_Validators.push(insuranceCoverageValidator);
-	    $('#gsc_insurancecoverage_label').parent("div").addClass("required");
-	   }
-	   
-		if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
-		{
-	    Page_Validators.push(totalPremiumValidator);
-	    $('#gsc_totalpremium_label').parent("div").addClass("required");
-		}
-			
-	 setTimeout(function () {
+       var insuranceCoverage = $("#gsc_insurancecoverage").val();
+       var provider = $("#gsc_providercompanyid").val();
+       
+       if(provider != "")
+       {
+        Page_Validators.push(insuranceCoverageValidator);
+        $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+       }
+       
+        if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") //Contains Value
+        {
+        Page_Validators.push(totalPremiumValidator);
+        $('#gsc_totalpremium_label').parent("div").addClass("required");
+        }
+            
+     setTimeout(function () {
       $("#gsc_insurancecoverage").on('change', function () {
       var insuranceCoverage = $("#gsc_insurancecoverage").val();
-			if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
-			{
-				Page_Validators.push(totalPremiumValidator);
-				$('#gsc_totalpremium_label').parent("div").addClass("required");
-			}
-			else
-			{
-				$('#gsc_totalpremium_label').parent("div").removeClass("required");
-				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+            if(insuranceCoverage == "100000001" || insuranceCoverage == "100000000") // Non Inventory
+            {
+                Page_Validators.push(totalPremiumValidator);
+                $('#gsc_totalpremium_label').parent("div").addClass("required");
+            }
+            else
+            {
+                $('#gsc_totalpremium_label').parent("div").removeClass("required");
+                Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != totalPremiumValidator;
             });
-			}
+            }
         });
     
     $("#gsc_providercompanyid").on('change', function () {
       var provider = $("#gsc_providercompanyid").val();
-			if(provider != "")
-			{
-				Page_Validators.push(insuranceCoverageValidator);
-				$('#gsc_insurancecoverage_label').parent("div").addClass("required");
-			}
-			else
-			{
-				$('#gsc_insurancecoverage_label').parent("div").removeClass("required");
-				Page_Validators = jQuery.grep(Page_Validators, function (value) {
+            if(provider != "")
+            {
+                Page_Validators.push(insuranceCoverageValidator);
+                $('#gsc_insurancecoverage_label').parent("div").addClass("required");
+            }
+            else
+            {
+                $('#gsc_insurancecoverage_label').parent("div").removeClass("required");
+                Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != insuranceCoverageValidator;
             });
-			}
+            }
         });
     }, 100);
     
@@ -589,8 +589,19 @@ $(document).ready(function () {
         }
       });
     }, 1000);
-    
-    //End	
+     
+
+    // $('li[role="presentation"]').on('click',  setTimeout(disableTab));
+
+   
+    setTimeout(disableTab, 3000);
+
+    function disableTab()
+    {
+        $('.disabled').attr("tabindex", "-1");
+        $('fieldset.permanent-disabled .btn').attr("tabindex", "-1");
+    }
+    //End
 });
 
 
