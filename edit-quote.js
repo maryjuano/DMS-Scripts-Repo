@@ -599,7 +599,12 @@ $(document).ready(function () {
         div.appendChild(span);
         $(".content-wrapper").append(div);
     }
+    setTimeout(disableTab, 3000);
 
+    function disableTab()
+    {
+        $('.disabled').attr("tabindex", "-1");
+    }
 });
 
 var classOdataUrl = "/_odata/gsc_class?$filter=gsc_classmaintenancepn eq 'Accessory'";
