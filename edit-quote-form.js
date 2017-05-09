@@ -27,12 +27,18 @@ $(document).ready(function (e) {
             else if (stateCode == "Active") {
                 $('#SubmitButton').attr("disabled", true);
                 $('.delete-link').attr("disabled", true);
+                $("#btnSaveCopy").attr("disabled", "true");
+                $(".cancel").attr("disabled", "true");
+                $(".addnew").attr("disabled", "true");
             }
             else if (stateCode == "Closed" || stateCode == "Won") {
                 $('#SubmitButton').attr("disabled", true);
                 $('.delete-link').attr("disabled", true);
                 $('#btnRecalculate').attr("disabled", true);
                 $('.close-quote').attr("disabled", true);
+                $("#btnSaveCopy").attr("disabled", "true");
+                $(".cancel").attr("disabled", "true");
+                $(".addnew").attr("disabled", "true");
             }
             else { }
 
