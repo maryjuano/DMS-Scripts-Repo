@@ -264,7 +264,7 @@ $(document).ready(function () {
 
     function checkReceivingItem() {
         if ($('#ReceivingTransactionDetail_Subgrid tbody').is(':visible')) {
-            $('#ReceivingTransactionDetail_Subgrid table tbody td .dropdown.action a').addClass("disabled");
+            $('#ReceivingTransactionDetail_Subgrid table tbody td .dropdown.action a').addClass("permanent-disabled");
         } else {
             setTimeout(checkReceivingItem, 100);
         }
@@ -315,11 +315,16 @@ $(document).ready(function () {
         isFromClose = false;
     });
 
+    setTimeout(disableTab, 300);
+
+    function disableTab()
+    {
+        $('.disabled').attr("tabindex", "-1");
+    }
     // Create Print Button in  Vehicle Component Checklist
     //btnPrint = DMS.Helpers.CreateButton('button', "btn-primary btn printVCC", '', ' PRINT A COPY', DMS.Helpers.CreateFontAwesomeIcon('fa-print'));
     //$('.section')[16].append(btnPrint);
     // End
-
 });
 
 
