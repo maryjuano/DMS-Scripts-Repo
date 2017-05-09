@@ -23,15 +23,7 @@ $(document).ready(function (e) {
             var opportunityId = $("#opportunityid").val();
             if (opportunityId != "") {
                 //Loading Image
-                $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
-
-                var div = document.createElement("DIV");
-                div.className = "view-loading message text-center loadingDiv";
-                div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
-                var span = document.createElement("SPAN");
-                span.className = "fa fa-2x fa-spinner fa-spin";
-                div.appendChild(span);
-                $(".content-wrapper").append(div);
+                showLoading();
 
                 $("#customerid").val("");
                 $("#customerid_name").val("");
@@ -47,31 +39,36 @@ $(document).ready(function (e) {
                     async: true,
                     url: countryOdataQuery,
                     success: function (data) {
-                        if (data.value.length != 0) {
-                            var customer = data.value[0].customerid;
-                            var baseModel = data.value[0].gsc_vehiclebasemodelid;
-                            var leadSource = data.value[0].gsc_leadsourceid;
-                            var paymentMode = data.value[0].gsc_paymentmode;
-                            var customerType = data.value[0].account-gsc_customertype;
-                            if (customer != null) {
-                                $("#customerid").val(customer.Id);
-                                $("#customerid_name").val(customer.Name);
-                                $("#customerid_entityname").val(customerType == null ? "contact" : "account");
-                                CheckifGovernment();
-                            }
-                            if (baseModel != null) {
-                                $("#gsc_vehiclebasemodelid").val(baseModel.Id);
-                                $("#gsc_vehiclebasemodelid_name").val(baseModel.Name);
-                                $("#gsc_vehiclebasemodelid_entityname").val("gsc_iv_vehiclebasemodel");
-                            }
-                            if (leadSource != null) {
-                                $("#gsc_leadsourceid").val(leadSource.Id);
-                                $("#gsc_leadsourceid_name").val(leadSource.Name);
-                                $("#gsc_leadsourceid_entityname").val("gsc_sls_leadsource");
-                            }
-                            if (paymentMode != null) {
-                                $("#gsc_paymentmode").val(paymentMode.Value);
-                            }
+                        if (data != null) {
+                            $.each(data.value, function (key, value) {
+                                var customer = value.customerid;
+                                var baseModel = value.gsc_vehiclebasemodelid;
+                                var leadSource = value.gsc_leadsourceid;
+                                var paymentMode = value.gsc_paymentmode;
+                                if (customer != null) {
+                                    $("#customerid").val(customer.Id);
+                                    $("#customerid_name").val(customer.Name);
+                                    $.each(value, function (x, y) {
+                                        if (x == "account-gsc_customertype") {
+                                            $("#customerid_entityname").val(y == null ? "contact" : "account");
+                                            CheckifGovernment();
+                                        }
+                                    });
+                                }
+                                if (baseModel != null) {
+                                    $("#gsc_vehiclebasemodelid").val(baseModel.Id);
+                                    $("#gsc_vehiclebasemodelid_name").val(baseModel.Name);
+                                    $("#gsc_vehiclebasemodelid_entityname").val("gsc_iv_vehiclebasemodel");
+                                }
+                                if (leadSource != null) {
+                                    $("#gsc_leadsourceid").val(leadSource.Id);
+                                    $("#gsc_leadsourceid_name").val(leadSource.Name);
+                                    $("#gsc_leadsourceid_entityname").val("gsc_sls_leadsource");
+                                }
+                                if (paymentMode != null) {
+                                    $("#gsc_paymentmode").val(paymentMode.Value);
+                                }
+                            });
                         }
                         $.unblockUI();
                         $(".loadingDiv").remove();
@@ -84,6 +81,7 @@ $(document).ready(function (e) {
             else {
                 $("#customerid").val("");
                 $("#customerid_name").val("");
+                $("#customerid_entityname").val("");
                 $('#customerid_name').siblings('.input-group-btn').removeClass('hidden');
                 $("#customerid").siblings('div.input-group-btn').children('.clearlookupfield').hide();
                 $("#gsc_leadsourceid").val("");
@@ -117,9 +115,10 @@ $(document).ready(function (e) {
     }, 100);
 
     function CheckifGovernment() {
+        showLoading();
+        console.log($("#customerid_entityname"));
         if ($("#customerid_entityname").val() == "account") {
             var accountid = $("#customerid").val();
-
             var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
 
             $.ajax({
@@ -127,17 +126,28 @@ $(document).ready(function (e) {
                 async: true,
                 url: odataUrl,
                 success: function (data) {
-                    for (var i = 0; i < data.value.length; i++) {
-                        var obj = data.value[i];
-                        if (obj.gsc_customertype.Name == "Corporate") {
-                            $("#customerid_name").closest("td").attr("colspan", 4);
-                            $('label[for=gsc_markup], input#gsc_markup').hide();
-                        }
-                        else {
-                            $("#customerid_name").closest("td").attr("colspan", 3);
-                            $('label[for=gsc_markup], input#gsc_markup').show();
-                        }
+                    console.log(data);
+                    if (data != null) {
+                        $.each(data.value, function (key, obj) {
+                            if (obj.gsc_customertype.Name == "Corporate") {
+                                console.log('a');
+                                $("#customerid_name").closest("td").attr("colspan", 4);
+                                $('label[for=gsc_markup], input#gsc_markup').hide();
+                            }
+                            else {
+                                console.log('b');
+                                $("#customerid_name").closest("td").attr("colspan", 3);
+                                $('label[for=gsc_markup], input#gsc_markup').show();
+                            }
+                        });
                     }
+                    else {
+                        console.log('c');
+                        $("#customerid_name").closest("td").attr("colspan", 4);
+                        $('label[for=gsc_markup], input#gsc_markup').hide();
+                    }
+                    $.unblockUI();
+                    $(".loadingDiv").remove();
                 },
                 error: function (xhr, textStatus, errorMessage) {
                     console.log(errorMessage);
@@ -147,6 +157,8 @@ $(document).ready(function (e) {
         else {
             $("#customerid_name").closest("td").attr("colspan", 4);
             $('label[for=gsc_markup], input#gsc_markup').hide();
+            $.unblockUI();
+            $(".loadingDiv").remove();
         }
     }
 
@@ -238,5 +250,19 @@ $(document).ready(function (e) {
     };
 
     Page_Validators.push(validUntilValidator);
+
+    function showLoading()
+    {
+        $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
+
+        var div = document.createElement("DIV");
+        div.className = "view-loading message text-center loadingDiv";
+        div.style.cssText = 'position: absolute; top: 50%; left: 50%;margin-right: -50%;display: block;';
+        var span = document.createElement("SPAN");
+        span.className = "fa fa-2x fa-spinner fa-spin";
+        div.appendChild(span);
+        $(".content-wrapper").append(div);
+
+    }
 
 });
