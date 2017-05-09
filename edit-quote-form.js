@@ -4,10 +4,6 @@ $(document).ready(function (e) {
 
     //for custom filtering of views
     setTimeout(function () {
-        
-        $("#customerid_name").closest("td").attr("colspan", 4);
-        $('label[for=gsc_markup], input#gsc_markup').hide();
-
         $("#gsc_portaluserid").val(userId);
         $.cookie("baseModel", $("#gsc_vehiclebasemodelid").val(), { path: '/' });
         $.cookie("productId", $("#gsc_productid").val(), { path: '/' });
@@ -72,9 +68,9 @@ $(document).ready(function (e) {
     {
         if($("#customerid_entityname").val() == "account")
         {
-            var accountid = $("#customeri").val();
+            var accountid = $("#customerid").val();
 
-            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
+            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'"+accountid+"')";
 
             $.ajax({
                 type: "get",
@@ -83,9 +79,9 @@ $(document).ready(function (e) {
                 success: function (data) {
                     for (var i = 0; i < data.value.length; i++) {
                         var obj = data.value[i];
-                        if (obj.gsc_customertype.Name == "Government") {
-                            $("#customerid_name").closest("td").attr("colspan", 3);
-                            $('label[for=gsc_markup], input#gsc_markup').show();
+                        if (obj.gsc_customertype.Name == "Corporate") {
+                            $("#customerid_name").closest("td").attr("colspan", 4);
+                            $('label[for=gsc_markup], input#gsc_markup').hide();
                         }
                     }
                 },
@@ -93,6 +89,10 @@ $(document).ready(function (e) {
                     console.log(errorMessage);
                 }
             });
+        }
+        else {
+            $("#customerid_name").closest("td").attr("colspan", 4);
+            $('label[for=gsc_markup], input#gsc_markup').hide();
         }
     }
 

@@ -52,9 +52,12 @@ $(document).ready(function (e) {
                             var baseModel = data.value[0].gsc_vehiclebasemodelid;
                             var leadSource = data.value[0].gsc_leadsourceid;
                             var paymentMode = data.value[0].gsc_paymentmode;
+                            var customerType = data.value[0].account-gsc_customertype;
                             if (customer != null) {
                                 $("#customerid").val(customer.Id);
                                 $("#customerid_name").val(customer.Name);
+                                $("#customerid_entityname").val(customerType == null ? "contact" : "account");
+                                CheckifGovernment();
                             }
                             if (baseModel != null) {
                                 $("#gsc_vehiclebasemodelid").val(baseModel.Id);
@@ -96,6 +99,10 @@ $(document).ready(function (e) {
             }
         });
 
+        $("#customerid").on('change', function () {
+            CheckifGovernment();
+        });
+
         $("#gsc_productid").on('change', function () {
             $('#gsc_vehiclecolorid1_name').val('');
             $('#gsc_vehiclecolorid1').val('');
@@ -108,6 +115,40 @@ $(document).ready(function (e) {
             $("#gsc_vehiclecolorid3").siblings('div.input-group-btn').children('.clearlookupfield').hide();
         });
     }, 100);
+
+    function CheckifGovernment() {
+        if ($("#customerid_entityname").val() == "account") {
+            var accountid = $("#customerid").val();
+
+            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
+
+            $.ajax({
+                type: "get",
+                async: true,
+                url: odataUrl,
+                success: function (data) {
+                    for (var i = 0; i < data.value.length; i++) {
+                        var obj = data.value[i];
+                        if (obj.gsc_customertype.Name == "Corporate") {
+                            $("#customerid_name").closest("td").attr("colspan", 4);
+                            $('label[for=gsc_markup], input#gsc_markup').hide();
+                        }
+                        else {
+                            $("#customerid_name").closest("td").attr("colspan", 3);
+                            $('label[for=gsc_markup], input#gsc_markup').show();
+                        }
+                    }
+                },
+                error: function (xhr, textStatus, errorMessage) {
+                    console.log(errorMessage);
+                }
+            });
+        }
+        else {
+            $("#customerid_name").closest("td").attr("colspan", 4);
+            $('label[for=gsc_markup], input#gsc_markup').hide();
+        }
+    }
 
     /* Added by: Christell Ann Mataac - 2/23/2017
       this will check duplicate preferred color */
