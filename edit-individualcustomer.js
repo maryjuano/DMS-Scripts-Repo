@@ -27,7 +27,7 @@ $(document).ready(function (e) {
           $(this).val("");
           DMS.Notification.Error("Monthly Income From must be less than Monthly Income To", true, 5000);
       }
-	  $( "#gsc_monthlyincometo" ).mask('000,000,000,000,000.00', {reverse: true});
+    $( "#gsc_monthlyincometo" ).mask('000,000,000,000,000.00', {reverse: true});
   });
   $( "#gsc_monthlyincomefrom" ).on('change', function () {
       var miFrom = $(this).val().replace(/,/g, '');
@@ -37,6 +37,13 @@ $(document).ready(function (e) {
           $(this).val("");
           DMS.Notification.Error("Monthly Income From must be less than Monthly Income To", true, 5000);
       }
-	  $( "#gsc_monthlyincomefrom" ).mask('000,000,000,000,000.00', {reverse: true});
+    $( "#gsc_monthlyincomefrom" ).mask('000,000,000,000,000.00', {reverse: true});
   });
+  setTimeout(disableTab, 3000);
+
+    function disableTab()
+    {
+        $('.disabled').attr("tabindex", "-1");
+        $('fieldset.permanent-disabled .btn').attr("tabindex", "-1");
+    }
 });
