@@ -19,7 +19,7 @@ $(document).ready(function () {
     }
 
     //Added by: JGC_12092016
-    var Userposition = DMS.Settings.User.positionName;
+    var Userposition = DMS.Settings.User.positionName;l
 
     /*Start - Revised by Christell Ann Mataac - 3/15/17 */
     /*if (Userposition != 'System Administrator' && Userposition != 'Branch Administrator' && Userposition != 'Sales Executive' && Userposition != 'Sales Supervisor' && Userposition != 'Sales Lead' && Userposition != 'Sales Manager' && Userposition != 'MMPC System Admin' && Userposition != 'MMPC System Administrator') 
@@ -205,10 +205,12 @@ $(document).ready(function () {
                                     var quoteStateCode = attrValue;
                                     console.log(quoteStateCode.Name);
                                     if (quoteStateCode.Name == 'Draft' || quoteStateCode.Name == 'Active') {
-                                        return alert('There are still active or draft quotes with the associated opportunity');
+                                        $('#createOrderModal').modal('hide');
+                                        DMS.Notification.Error('There are still active or draft quotes with the associated opportunity');
                                     }
                                     else if (quoteStateCode.Name == 'Won') {
-                                        return alert('There are won quotes associated with the opportunity. The opportunity must be manually updated from Draft to Won.');
+                                        $('#createOrderModal').modal('hide');
+                                        DMS.Notification.Error('There are won quotes associated with the opportunity. The opportunity must be manually updated from Draft to Won.');
                                     }
                                 }
                             }
