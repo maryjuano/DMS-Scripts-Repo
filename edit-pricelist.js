@@ -4,6 +4,10 @@ $(document).ready(function (e) {
     var status = $(".record-status").html();
     var entityId = getQueryVariable('id');
     var workflowName = 'Price List - Change Status';
+    var webRole = DMS.Settings.User.webRole;
+
+    if(!webRole.includes("MMPC"))
+        $("#gsc_default").attr("disabled", "disabled");
     
     if (status == "Inactive") {
         checkSubgrid();
