@@ -19,7 +19,7 @@ $(document).ready(function () {
     }
 
     //Added by: JGC_12092016
-    var Userposition = DMS.Settings.User.positionName;l
+    var Userposition = DMS.Settings.User.positionName;
 
     /*Start - Revised by Christell Ann Mataac - 3/15/17 */
     /*if (Userposition != 'System Administrator' && Userposition != 'Branch Administrator' && Userposition != 'Sales Executive' && Userposition != 'Sales Supervisor' && Userposition != 'Sales Lead' && Userposition != 'Sales Manager' && Userposition != 'MMPC System Admin' && Userposition != 'MMPC System Administrator') 
@@ -178,6 +178,7 @@ $(document).ready(function () {
         var closeOpportunityValue2 = $('input[name="closeOpportunity2"]:checked').val();
         var opportunityId = $('#opportunityid').val();
         var quoteId = DMS.Helpers.GetUrlQueryString('id');
+        var isValidForCreateOrder = true;
 
         if (opportunityId == null) {
             opportunityId = '00000000-0000-0000-0000-000000000000';
@@ -191,7 +192,7 @@ $(document).ready(function () {
         if (closeOpportunityValue2 == 1) {
             $.ajax({
                 type: 'get',
-                async: true,
+                async: false,
                 url: opportunityOdataUrl,
                 success: function (data) {
                     console.log(data.value[0].quoteid);
@@ -207,10 +208,12 @@ $(document).ready(function () {
                                     if (quoteStateCode.Name == 'Draft' || quoteStateCode.Name == 'Active') {
                                         $('#createOrderModal').modal('hide');
                                         DMS.Notification.Error('There are still active or draft quotes with the associated opportunity');
+                                        isValidForCreateOrder = false;
                                     }
                                     else if (quoteStateCode.Name == 'Won') {
                                         $('#createOrderModal').modal('hide');
                                         DMS.Notification.Error('There are won quotes associated with the opportunity. The opportunity must be manually updated from Draft to Won.');
+                                        isValidForCreateOrder = false;
                                     }
                                 }
                             }
@@ -227,24 +230,26 @@ $(document).ready(function () {
         else {
             workflowName = 'Quote Won - Do Not Close Opportunity';
         }
-
-        showLoading();
-
-        $.ajax({
+        
+        if (isValidForCreateOrder == true) {
+          $('#createOrderModal').modal('hide');
+          showLoading();
+          $.ajax({
             type: "PUT",
             url: "/api/Service/RunWorkFlow/?workflowName=" + workflowName + "&entityId=" + entityId,
             success: function (response) {
-                var url = document.location.protocol + '//' +
+              var url = document.location.protocol + '//' +
                     document.location.host + (document.location.host.indexOf("demo.adxstudio.com") != -1
                         ? document.location.pathname.split("/").slice(0, 3).join("/")
                         : "") + '/Cache.axd?Message=InvalidateAll&d=' +
                     (new Date()).valueOf();
-                var req = new XMLHttpRequest();
-                req.open('GET', url, false);
-                req.send(null); //window.location.reload(true);
-                setTimeout(RedirecttoSalesOrder(), 1000);
+                    var req = new XMLHttpRequest();
+                    req.open('GET', url, false);
+                    req.send(null); //window.location.reload(true);
+                    setTimeout(RedirecttoSalesOrder(), 1000);
             }
-        }).error(function (errormsg) { console.log(errormsg) });
+          }).error(function (errormsg) { console.log(errormsg) });
+        }
     });
 
     function RedirecttoSalesOrder() {
