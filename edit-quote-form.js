@@ -34,7 +34,8 @@ $(document).ready(function (e) {
             else if (stateCode == "Closed" || stateCode == "Won") {
                 $('#SubmitButton').attr("disabled", true);
                 $('.delete-link').attr("disabled", true);
-                $('#btnRecalculate').attr("disabled", true);
+                $('#btnRecalculate').attr("disabled", "true");
+                $('#btnRecalculate').addClass("disabled");
                 $('.close-quote').attr("disabled", true);
                 $("#btnSaveCopy").attr("disabled", "true");
                 $(".cancel").attr("disabled", "true");
@@ -70,13 +71,11 @@ $(document).ready(function (e) {
 
     }
 
-    function CheckifGovernment() 
-    {
-        if($("#customerid_entityname").val() == "account")
-        {
+    function CheckifGovernment() {
+        if ($("#customerid_entityname").val() == "account") {
             var accountid = $("#customerid").val();
 
-            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'"+accountid+"')";
+            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
 
             $.ajax({
                 type: "get",
@@ -592,8 +591,8 @@ $(document).ready(function (e) {
             aflessdiscount = 0.00;
             additional = 0.0;
 
-            $("#gsc_downpaymentamount").val("");
-            $("#gsc_downpaymentpercentage").val("");
+            //$("#gsc_downpaymentamount").val("");
+            //$("#gsc_downpaymentpercentage").val("");
             $("#gsc_netdownpayment").val("");
             $("#gsc_amountfinanced").val("");
             $("#gsc_netamountfinanced").val("");
@@ -724,9 +723,11 @@ $(document).ready(function (e) {
         });
 
         $('#gsc_netdownpayment').on('change', function () {
-            console.log(downpayment);
-            if (paymentMode != '100000002' && downpayment != 0) {
+            if (paymentMode == '100000001' || (paymentMode == '100000002' && parseFloat(downpayment) != 0)) {
                 computeAmountFinanced(additional, netPrice);
+            }
+            else if (paymentMode == '100000002' && parseFloat(downpayment) == 0) {
+                $("#gsc_amountfinanced").val(null);
             }
         });
         $("#gsc_amountfinanced").on('change', function () {
