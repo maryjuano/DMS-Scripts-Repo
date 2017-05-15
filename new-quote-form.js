@@ -116,7 +116,6 @@ $(document).ready(function (e) {
 
     function CheckifGovernment() {
         showLoading();
-        console.log($("#customerid_entityname"));
         if ($("#customerid_entityname").val() == "account") {
             var accountid = $("#customerid").val();
             var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
@@ -126,25 +125,21 @@ $(document).ready(function (e) {
                 async: true,
                 url: odataUrl,
                 success: function (data) {
-                    console.log(data);
-                    if (data != null) {
+                    if (data == null || data.value.length == 0) {
+                        $("#customerid_name").closest("td").attr("colspan", 4);
+                        $('label[for=gsc_markup], input#gsc_markup').hide();
+                    }
+                    else {
                         $.each(data.value, function (key, obj) {
                             if (obj.gsc_customertype.Name == "Corporate") {
-                                console.log('a');
                                 $("#customerid_name").closest("td").attr("colspan", 4);
                                 $('label[for=gsc_markup], input#gsc_markup').hide();
                             }
                             else {
-                                console.log('b');
                                 $("#customerid_name").closest("td").attr("colspan", 3);
                                 $('label[for=gsc_markup], input#gsc_markup').show();
                             }
                         });
-                    }
-                    else {
-                        console.log('c');
-                        $("#customerid_name").closest("td").attr("colspan", 4);
-                        $('label[for=gsc_markup], input#gsc_markup').hide();
                     }
                     $.unblockUI();
                     $(".loadingDiv").remove();
@@ -251,8 +246,7 @@ $(document).ready(function (e) {
 
     Page_Validators.push(validUntilValidator);
 
-    function showLoading()
-    {
+    function showLoading() {
         $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
 
         var div = document.createElement("DIV");
