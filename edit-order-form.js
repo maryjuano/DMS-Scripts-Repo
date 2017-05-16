@@ -7,8 +7,6 @@ $(document).ready(function (e) {
 
     setTimeout(function () {
         $("#gsc_portaluserid").val(userId);
-        //$.cookie("vehicleType", $("#gsc_vehicletypeid").val(), { path: '/' });
-        //$.cookie("vehicleUse", $("#gsc_vehicleuse").val(), { path: '/' });
         $.cookie("baseModel", $("#gsc_vehiclebasemodelid").val(), { path: '/' });
         $.cookie("productId", $("#gsc_productid").val(), { path: '/' });
         $.cookie("siteId", $("#gsc_siteid").val(), { path: '/' });
@@ -21,14 +19,6 @@ $(document).ready(function (e) {
         $.cookie("VINValue", $("#gsc_vin").val(), { path: '/' });
         $.cookie("productionNoCriteria", $("#gsc_productionnocriteria").val(), { path: '/' });
         $.cookie("productionNoValue", $("#gsc_productionno").val(), { path: '/' });
-
-        /*$("#gsc_vehicletypeid").on('change', function () {
-            $.cookie("vehicleType", $("#gsc_vehicletypeid").val(), { path: '/' });
-        });
-
-        $("#gsc_vehicleuse").on('change', function () {
-            $.cookie("vehicleUse", $("#gsc_vehicleuse").val(), { path: '/' });
-        });*/
 
         $("#gsc_siteid").on('change', function () {
             $.cookie("siteId", $("#gsc_siteid").val(), { path: '/' });
@@ -76,12 +66,7 @@ $(document).ready(function (e) {
             var $subgrid = $(this).closest(".subgrid");
             var $subgridId = $subgrid.parent().prop("id");
 
-            /*if ($subgridId == "Inventory") {
-                e.preventDefault();
-                e.stopPropagation();
-                $("#Inventory").children(".subgrid").trigger("refresh");
-            }
-            else*/ if ($subgridId == "AllocatedItems") {
+            if ($subgridId == "AllocatedItems") {
                 e.preventDefault();
                 e.stopPropagation();
                 if (status == "Allocated") {
@@ -119,6 +104,7 @@ $(document).ready(function (e) {
     //show convert order to invoice button if status = "For Invoicing"
     if ($("#gsc_status").val() != "100000004") {
         $(".convert-order-link").addClass("hidden");
+        $(".datetimepicker > input").attr("disabled", "true");
     }
 
     //set readonly fields
@@ -137,7 +123,7 @@ $(document).ready(function (e) {
     var downpayment = $("#gsc_downpaymentamount").val();
     var dppercent = $("#gsc_downpaymentpercentage").val();
     var lessdiscount = $("#gsc_downpaymentdiscount").val();
-
+    var paymentmode = $("#gsc_paymentmode").val();
 
     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
@@ -200,6 +186,38 @@ $(document).ready(function (e) {
         }
     };
 
+    var downPaymentAmountValidator = document.createElement('span');
+    downPaymentAmountValidator.style.display = 'none';
+    downPaymentAmountValidator.id = 'RequiredFieldValidatorgsc_downpaymentamount';
+    downPaymentAmountValidator.controltovalidate = 'gsc_downpaymentamount';
+    downPaymentAmountValidator.errormessage = '<a href="#gsc_downpaymentamount">Down Payment is a required field</a>';
+    downPaymentAmountValidator.validationGroup = '';
+    downPaymentAmountValidator.initialvalue = '';
+    downPaymentAmountValidator.evaluationfunction = function () {
+        var value = $('#gsc_downpaymentamount').val();
+        if (value == null || value == '') {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    var downPaymentPercentageValidator = document.createElement('span');
+    downPaymentPercentageValidator.style.display = 'none';
+    downPaymentPercentageValidator.id = 'RequiredFieldValidatorgsc_downpaymentpercentage';
+    downPaymentPercentageValidator.controltovalidate = 'gsc_downpaymentpercentage';
+    downPaymentPercentageValidator.errormessage = '<a href="#gsc_downpaymentpercentage"> Down Payment Percentage is a required field</a>';
+    downPaymentPercentageValidator.validationGroup = '';
+    downPaymentPercentageValidator.initialvalue = '';
+    downPaymentPercentageValidator.evaluationfunction = function () {
+        var value = $('#gsc_downpaymentpercentage').val();
+        if (value == null || value == '') {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
     //validations
     setTimeout(function () {
         //check order status if open or not
@@ -254,8 +272,6 @@ $(document).ready(function (e) {
             aflessdiscount = 0.00;
             additional = 0.0;
 
-            $("#gsc_downpaymentamount").val("");
-            $("#gsc_downpaymentpercentage").val("");
             $("#gsc_netdownpayment").val("");
             $("#gsc_amountfinanced").val("");
             $("#gsc_netamountfinanced").val("");
@@ -306,7 +322,6 @@ $(document).ready(function (e) {
     }
 
     function paymentModeOnChange() {
-        var paymentmode = $("#gsc_paymentmode").val();
         var dpamountfield = $('#gsc_downpaymentamount');
         var dppercentield = $('#gsc_downpaymentpercentage');
         var bankidfield = $('#gsc_bankid_name');
@@ -328,13 +343,15 @@ $(document).ready(function (e) {
             applytodpprcntfield.prop('readonly', true);
             applytoafamntfield.prop('readonly', true);
             applytoafprcntfield.prop('readonly', true);
-            dpamountfield.prop('readonly', true);          
+            dpamountfield.prop('readonly', true);
             dppercentield.prop('readonly', true);
             bankidfield.siblings('.input-group-btn').addClass('hidden');
             schemeidfield.siblings('.input-group-btn').addClass('hidden');
 
             $('#gsc_bankid_label').parent("div").removeClass("required");
             $('#gsc_financingschemeid_label').parent("div").removeClass("required");
+            $('#gsc_downpaymentamount_label').parent('div').removeClass('required');
+            $('#gsc_downpaymentpercentage_label').parent('div').removeClass('required');
 
             // Remove the new validator to the page validators array:
             Page_Validators = jQuery.grep(Page_Validators, function (value) {
@@ -343,19 +360,22 @@ $(document).ready(function (e) {
             Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != schemeValidator;
             });
+            Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != downPaymentAmountValidator;
+            });
+            Page_Validators = jQuery.grep(Page_Validators, function (value) {
+                return value != downPaymentPercentageValidator;
+            });
         }
         else if (paymentmode == '100000002') {
 
-            chattelFeefield.attr('readonly', true);         
+            chattelFeefield.attr('readonly', true);
             applytoafamntfield.prop('readonly', true);
-            applytoafprcntfield.prop('readonly', true);   
-          
+            applytoafprcntfield.prop('readonly', true);
+
             schemeidfield.siblings('.input-group-btn').addClass('hidden');
-               $('#gsc_bankid_label').parent("div").addClass('required');
-          
             $('#gsc_financingschemeid_label').parent("div").removeClass("required");
-         
-           
+
             Page_Validators = jQuery.grep(Page_Validators, function (value) {
                 return value != schemeValidator;
             });
@@ -363,10 +383,14 @@ $(document).ready(function (e) {
         else if (paymentmode == '100000001') {
             $('#gsc_bankid_label').parent("div").addClass('required');
             $('#gsc_financingschemeid_label').parent("div").addClass('required');
+            $('#gsc_downpaymentamount_label').parent('div').addClass('required');
+            $('#gsc_downpaymentpercentage_label').parent('div').addClass('required');
 
             // Add the new validator to the page validators array:
             Page_Validators.push(bankValidator);
             Page_Validators.push(schemeValidator);
+            Page_Validators.push(downPaymentAmountValidator);
+            Page_Validators.push(downPaymentPercentageValidator);
         }
     }
 
@@ -381,8 +405,13 @@ $(document).ready(function (e) {
         });
 
         $('#gsc_netdownpayment').on('change', function () {
-            computeAmountFinanced();
+            if (paymentmode == '100000001' || (paymentmode == '100000002' && parseFloat(downpayment) != 0)) {
+                computeAmountFinanced();
+            }
+            else if (paymentmode == '100000002' && downpayment == 0)
+                $("#gsc_amountfinanced").val(null);
         });
+
         $("#gsc_amountfinanced").on('change', function () {
             computeNetAmountFinanced();
         });
@@ -397,8 +426,6 @@ $(document).ready(function (e) {
         netprice = parseFloat($('#gsc_netprice').html().substr(1).replace(/,/g, ""));
         dppercent = $("#gsc_downpaymentpercentage").val() == "" ? 0 : $("#gsc_downpaymentpercentage").val();
 
-        //downpayment = (parseFloat(unitprice) + parseFloat(additional)) * (parseFloat(dppercent) / 100);
-        //downpayment = (parseFloat(unitprice)) * (parseFloat(dppercent) / 100);
         downpayment = (parseFloat(netprice)) * (parseFloat(dppercent) / 100);
 
         $("#gsc_downpaymentamount").val(downpayment.toFixed(2));
@@ -409,13 +436,10 @@ $(document).ready(function (e) {
     //Modified By : Jerome Anthony Gerero, Modified On : 12/15/2016
     //Purpose : Change computation to Unit Price * Down Payment Percentage
     function computeDownPaymentPercent() {
-        //unitprice = parseFloat($('#gsc_unitprice').html().substr(1).replace(/,/g, ""));
         netprice = parseFloat($('#gsc_netprice').html().substr(1).replace(/,/g, ""));
         downpayment = $("#gsc_downpaymentamount").val() == "" ? 0 : $("#gsc_downpaymentamount").val();
 
         if (netprice != 0) {
-            //dppercent = (parseFloat(downpayment) / (parseFloat(unitprice) + parseFloat(additional))) * 100;
-            //dppercent = (parseFloat(downpayment) / (parseFloat(unitprice))) * 100;
             dppercent = (parseFloat(downpayment) / (parseFloat(netprice))) * 100;
             $("#gsc_downpaymentpercentage").val(parseFloat(dppercent).toFixed(2));
         } else {
@@ -445,10 +469,8 @@ $(document).ready(function (e) {
     //compute amount financed = unitprice + additional price - netdownpayment
     function computeAmountFinanced() {
         netPrice = parseFloat($('#gsc_netprice').html().substr(1).replace(/,/g, ""));
-        //netdownpayment = $("#gsc_netdownpayment").val() == "" ? 0 : $("#gsc_netdownpayment").val().replace(/,/g, "");
         grossDownpayment = $("#gsc_downpaymentamount").val() == "" ? 0 : $("#gsc_downpaymentamount").val().replace(/,/g, "");
 
-        //amountfinanced = (parseFloat(unitprice) + parseFloat(additional)) - parseFloat(netdownpayment);
         amountfinanced = parseFloat(netPrice) - parseFloat(grossDownpayment);
         $("#gsc_amountfinanced").val(amountfinanced.toLocaleString());
         $("#gsc_amountfinanced").trigger('change');
@@ -457,11 +479,9 @@ $(document).ready(function (e) {
     //compute net amount finance = amount financed - less discount
     function computeNetAmountFinanced() {
         amountfinanced = $("#gsc_amountfinanced").val().replace(/,/g, "");
-        //aflessdiscount = $("#gsc_discountamountfinanced").val() == "" ? "0" : $("#gsc_discountamountfinanced").val().replace(/,/g, "");
         var downPaymentDiscountAmount = $("#gsc_downpaymentdiscount").val() == "" ? "0" : $("#gsc_downpaymentdiscount").val().replace(/,/g, "");
 
         if (amountfinanced > 0) {
-            // netamountfinanced = amountfinanced - parseFloat(aflessdiscount);
             netamountfinanced = amountfinanced - parseFloat(downPaymentDiscountAmount);
             $("#gsc_netamountfinanced").val(netamountfinanced.toLocaleString());
         } else {
@@ -704,8 +724,8 @@ $(document).ready(function (e) {
     });
 
     setTimeout(function () {
-        if ($('#gsc_iscreateinvoice').is(":checked")) {   
-           $('.convert-order-link').addClass('permanent-disabled disabled');
+        if ($('#gsc_iscreateinvoice').is(":checked")) {
+            $('.convert-order-link').addClass('permanent-disabled disabled');
             $('.delete-link').addClass('permanent-disabled disabled');
             $('#UpdateButton').addClass('permanent-disabled disabled');
             $('.btnReCalculate').addClass('permanent-disabled disabled');
@@ -720,57 +740,51 @@ $(document).ready(function (e) {
     $("#gsc_applytodppercentage").attr("min", 0);
     $("#gsc_applytoafamount").attr("min", 0);
     $("#gsc_applytodpamount").attr("min", 0);
-    
-    setTimeout(function () {
-      
-    /*Start - Added by Christell Ann Mataac - 03/10/2017*/
 
-      /*Need to disable Add/Save/Cancel/Remove Buttons in Accessory and Cab Chassis on selected web roles*/
-        if (DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'Vehicle Allocator' || DMS.Settings.User.positionName == 'MSD Manager' || DMS.Settings.User.positionName == 'PDI Inspector' || DMS.Settings.User.positionName == 'Invoice Generator' || DMS.Settings.User.positionName == 'C and C Manager' || DMS.Settings.User.positionName == 'Sales Supervisor' && userId != $('#gsc_recordownerid').val()) 
-        {
-          $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-          $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-          $('button.save.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-          $('button.save.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-          $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-          $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
-          $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled',true);
-          $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled',true);
+    setTimeout(function () {
+
+        /*Start - Added by Christell Ann Mataac - 03/10/2017*/
+
+        /*Need to disable Add/Save/Cancel/Remove Buttons in Accessory and Cab Chassis on selected web roles*/
+        if (DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'Vehicle Allocator' || DMS.Settings.User.positionName == 'MSD Manager' || DMS.Settings.User.positionName == 'PDI Inspector' || DMS.Settings.User.positionName == 'Invoice Generator' || DMS.Settings.User.positionName == 'C and C Manager' || DMS.Settings.User.positionName == 'Sales Supervisor' && userId != $('#gsc_recordownerid').val()) {
+            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.addnew.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.save.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.delete.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
+            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(0).attr('disabled', true);
+            $('button.cancel.btn.btn-default.btn-sm.btn-primary').eq(1).attr('disabled', true);
         }
-        
-        if(DMS.Settings.User.positionName == 'C and C Manager' || DMS.Settings.User.positionName == 'Cashier' || DMS.Settings.User.positionName == 'Invoice Generator' || DMS.Settings.User.positionName == 'PDI Inspector') //show Create Invoice Button
+
+        if (DMS.Settings.User.positionName == 'C and C Manager' || DMS.Settings.User.positionName == 'Cashier' || DMS.Settings.User.positionName == 'Invoice Generator' || DMS.Settings.User.positionName == 'PDI Inspector') //show Create Invoice Button
         {
-          $( "a:contains('READY FOR PDI')" ).attr("disabled", true); //disabled "READY FOR PDI" button
-          $('a.request-link.btn-primary.btn').attr("disabled",true); //disabled "Request Vehicle Allocation" button
-          
-          //this function sets all field in sales order to readonly status to avoid editing the fields
-          $('#UpdateButton.btn.btn-primary.button.fa-input-submit.submit-btn').hide();
-          $("#EntityFormView :input").attr("disabled", true); 
+            $("a:contains('READY FOR PDI')").attr("disabled", true); //disabled "READY FOR PDI" button
+            $('a.request-link.btn-primary.btn').attr("disabled", true); //disabled "Request Vehicle Allocation" button
+
+            //this function sets all field in sales order to readonly status to avoid editing the fields
+            $('#UpdateButton.btn.btn-primary.button.fa-input-submit.submit-btn').hide();
+            $("#EntityFormView :input").attr("disabled", true);
         }
-          
-        if(DMS.Settings.User.positionName == 'Sales Manager' || DMS.Settings.User.positionName == 'Vehicle Allocator')
-        {
-          //disabled "Transfer to Invoice" button from Sales Order Update
-          $('button.convert-order-link.btn.btn-primary').attr('disabled',true); // disabled "CREATE INVOICE"
-          $( "a:contains('READY FOR PDI')" ).attr("disabled", true); // disabled "READY FOR PDI"
-          $( "a:contains('TRANSFER FOR INVOICE')" ).attr("disabled", true); //disabled "TRANSFER FOR INVOICE"
-        
+
+        if (DMS.Settings.User.positionName == 'Sales Manager' || DMS.Settings.User.positionName == 'Vehicle Allocator') {
+            //disabled "Transfer to Invoice" button from Sales Order Update
+            $('button.convert-order-link.btn.btn-primary').attr('disabled', true); // disabled "CREATE INVOICE"
+            $("a:contains('READY FOR PDI')").attr("disabled", true); // disabled "READY FOR PDI"
+            $("a:contains('TRANSFER FOR INVOICE')").attr("disabled", true); //disabled "TRANSFER FOR INVOICE"
+
         }
-        
-        if(DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'MSD Manager' || DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead'  && userId != $('#gsc_recordownerid').val())
-        {
-            $("#EntityFormView").attr("disabled", true); 
-            $('#tab-1-1').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true)            
+
+        if (DMS.Settings.User.positionName == 'MMPC System Admin' || DMS.Settings.User.positionName == 'MMPC System Administrator' || DMS.Settings.User.positionName == 'MSD Manager' || DMS.Settings.User.positionName == 'Sales Supervisor' || DMS.Settings.User.positionName == 'Sales Lead' && userId != $('#gsc_recordownerid').val()) {
+            $("#EntityFormView").attr("disabled", true);
+            $('#tab-1-1').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true)
             $('#tab-1-2').find('a.btn.btn-primary.action.add-margin-right').attr('disabled', true)
-            
-            if(DMS.Settings.User.positionName == 'MSD Manager'){
+
+            if (DMS.Settings.User.positionName == 'MSD Manager') {
                 $(".allocate-link").attr('disabled', false);
-                //$('.box-body table[data-name="VEHICLECRITERIA"] tbody > tr > td').attr("disabled", false);
-                
             }
         }
-        
-    /*End - Added by Christell Ann Mataac - 03/10/2017*/
-      
+        /*End - Added by Christell Ann Mataac - 03/10/2017*/
+
     }, 7000);
 });
