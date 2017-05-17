@@ -11,7 +11,8 @@ $(document).ready(function (e) {
 
         }, 2000);
     });
-
+    if(DMS.Settings.User.positionName == "Sales Executive")
+        SetSalesExecutive();
     setTimeout(function () {
 
         $('#gsc_validuntil').next('.datetimepicker').on("dp.change", function (e) {
@@ -114,6 +115,10 @@ $(document).ready(function (e) {
         });
     }, 100);
 
+    function SetSalesExecutive{}{
+        $("#gsc_salesexecutiveid_entityname").val("contact");
+        $("#gsc_salesexecutiveid").val(DMS.Settings.User.Id);
+    }
     function CheckifGovernment() {
         showLoading();
         if ($("#customerid_entityname").val() == "account") {
@@ -125,7 +130,8 @@ $(document).ready(function (e) {
                 async: true,
                 url: odataUrl,
                 success: function (data) {
-                    if (data == null || data.value.length == 0) {
+                    if (data == null || data.value.length == 0)
+                    {
                         $("#customerid_name").closest("td").attr("colspan", 4);
                         $('label[for=gsc_markup], input#gsc_markup').hide();
                     }
@@ -246,7 +252,8 @@ $(document).ready(function (e) {
 
     Page_Validators.push(validUntilValidator);
 
-    function showLoading() {
+    function showLoading()
+    {
         $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
 
         var div = document.createElement("DIV");
