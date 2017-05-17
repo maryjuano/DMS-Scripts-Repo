@@ -115,9 +115,11 @@ $(document).ready(function (e) {
         });
     }, 100);
 
-    function SetSalesExecutive{}{
+    function SetSalesExecutive(){
         $("#gsc_salesexecutiveid_entityname").val("contact");
         $("#gsc_salesexecutiveid").val(DMS.Settings.User.Id);
+        var fullName = $("#userFullname").html();
+        $("#gsc_salesexecutiveid_name").val(fullName);
     }
     function CheckifGovernment() {
         showLoading();
