@@ -11,10 +11,12 @@ $(document).ready(function (e) {
 
         }, 2000);
     });
-    if(DMS.Settings.User.positionName == "Sales Executive")
-        SetSalesExecutive();
+   
     setTimeout(function () {
-
+        
+        if(DMS.Settings.User.positionName == "Sales Executive")
+            SetSalesExecutive();
+        
         $('#gsc_validuntil').next('.datetimepicker').on("dp.change", function (e) {
             $(this).data("DateTimePicker").setMinDate(new Date());
         });

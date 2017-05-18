@@ -4,6 +4,10 @@ $(document).ready(function () {
     $('#gsc_branchid_name').siblings('.input-group-btn').addClass('hidden');
 
     setTimeout(function () {
+        
+        if(DMS.Settings.User.positionName == "Sales Executive")
+        SetSalesExecutive();
+
         $('#gsc_productid').on('change', function () {
             $("#gsc_vehiclecolorid1").val("");
             $("#gsc_vehiclecolorid1_name").val("");
@@ -35,8 +39,7 @@ $(document).ready(function () {
         });
     }, 100);
 
-    if(DMS.Settings.User.positionName == "Sales Executive")
-        SetSalesExecutive();
+    
     
     //Check for duplicate preffered color
     function clearColorField(colorFieldName) {
