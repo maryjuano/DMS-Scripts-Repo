@@ -47,6 +47,8 @@ $(document).ready(function (e) {
             if ($("#MessageLabel").length != 0) {
                 if ($("#MessageLabel").html().contains("tax") && $("#MessageLabel").html().contains("Product")) {
                 }
+                else if ($("#MessageLabel").html().contains("effective Price List")) {
+                }
                 else {
                     //disable product and payment mode
                     if ($("#gsc_productid").val() != "")
