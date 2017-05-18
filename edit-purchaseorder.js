@@ -23,6 +23,7 @@ $(document).ready(function () {
         $("#EntityFormView fieldset").addClass("permanent-disabled");
         $('#gsc_vpostatus').css({ "pointer-events": "none", "cursor": "default" });
         $('#gsc_approvalstatus').css({ "pointer-events": "none", "cursor": "default" });
+        $("#gsc_remarks").css('resize', 'none');
     }
     else {
         createCancelButton();
