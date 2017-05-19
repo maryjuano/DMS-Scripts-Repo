@@ -411,6 +411,7 @@ $(document).ready(function (){
   }
   
   //ADDED
+
      $(document).on('click', '#AvailableVehicles .view-grid table tbody tr', AddEventtoAvailableClick);
   
   setTimeout(function () {
