@@ -98,7 +98,7 @@ $(document).ready(function () {
         showLoading();
         if ($("#customerid_entityname").val() == "account") {
             var accountid = $("#customerid").val();
-            var odataUrl = "/_odata/corporateCustomer?$filter=accountid eq (Guid'" + accountid + "')";
+            var odataUrl = "/_odata/account?$filter=accountid eq (Guid'" + accountid + "')";
 
             $.ajax({
                 type: "get",
