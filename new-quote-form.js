@@ -11,12 +11,12 @@ $(document).ready(function (e) {
 
         }, 2000);
     });
-   
+
     setTimeout(function () {
-        
-        if(DMS.Settings.User.positionName == "Sales Executive")
+
+        if (DMS.Settings.User.positionName == "Sales Executive")
             SetSalesExecutive();
-        
+
         $('#gsc_validuntil').next('.datetimepicker').on("dp.change", function (e) {
             $(this).data("DateTimePicker").setMinDate(new Date());
         });
@@ -117,12 +117,13 @@ $(document).ready(function (e) {
         });
     }, 100);
 
-    function SetSalesExecutive(){
+    function SetSalesExecutive() {
         $("#gsc_salesexecutiveid_entityname").val("contact");
         $("#gsc_salesexecutiveid").val(DMS.Settings.User.Id);
         var fullName = $("#userFullname").html();
         $("#gsc_salesexecutiveid_name").val(fullName);
     }
+
     function CheckifGovernment() {
         showLoading();
         if ($("#customerid_entityname").val() == "account") {
@@ -134,16 +135,13 @@ $(document).ready(function (e) {
                 async: true,
                 url: odataUrl,
                 success: function (data) {
-                    if (data == null || data.value.length == 0)
-                    {
-                        $("#customerid_name").closest("td").attr("colspan", 4);
-                        $('label[for=gsc_markup], input#gsc_markup').hide();
+                    if (data == null || data.value.length == 0) {
+                        HideMakup();
                     }
                     else {
                         $.each(data.value, function (key, obj) {
                             if (obj.gsc_customertype.Name == "Corporate") {
-                                $("#customerid_name").closest("td").attr("colspan", 4);
-                                $('label[for=gsc_markup], input#gsc_markup').hide();
+                                HideMakup();
                             }
                             else {
                                 $("#customerid_name").closest("td").attr("colspan", 3);
@@ -160,11 +158,16 @@ $(document).ready(function (e) {
             });
         }
         else {
-            $("#customerid_name").closest("td").attr("colspan", 4);
-            $('label[for=gsc_markup], input#gsc_markup').hide();
+            HideMakup();
             $.unblockUI();
             $(".loadingDiv").remove();
         }
+    }
+
+    function HideMakup() {
+        $("#customerid_name").closest("td").attr("colspan", 4);
+        $("#gsc_markup").val("");
+        $('label[for=gsc_markup], input#gsc_markup').hide();
     }
 
     /* Added by: Christell Ann Mataac - 2/23/2017
@@ -256,8 +259,7 @@ $(document).ready(function (e) {
 
     Page_Validators.push(validUntilValidator);
 
-    function showLoading()
-    {
+    function showLoading() {
         $.blockUI({ message: null, overlayCSS: { opacity: .3 } });
 
         var div = document.createElement("DIV");
