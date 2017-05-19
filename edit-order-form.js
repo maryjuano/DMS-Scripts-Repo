@@ -1,6 +1,6 @@
 //Created By : Leslie Baliguat, Created On : 3/16/2016
 $(document).ready(function (e) {
-    var status = $("#gsc_status :selected").text();
+    var status = $(".record-status").html();
 
     //set status field readonly 
     $('table[data-name="hideSection"]').closest('fieldset').hide();
@@ -106,12 +106,11 @@ $(document).ready(function (e) {
                 $("#gsc_allocateditemstodelete").val(allocateditems);
                 $("#UpdateButton").click();
             }
-
         });
     }
 
     //show convert order to invoice button if status = "For Invoicing"
-    if ($("#gsc_status").val() != "100000004") {
+    if (status != "For Invoicing") {
         $(".convert-order-link").addClass("hidden");
         $(".datetimepicker > input").attr("disabled", "true");
     }
@@ -728,12 +727,13 @@ $(document).ready(function (e) {
     // CREATE INVOICE  by Artum Ramos
 
     $(".convert-order-link").click(function () {
-        $("#gsc_iscreateinvoice").prop("checked", true);
+        $("#gsc_status").val("100000007");
+       // $("#gsc_iscreateinvoice").prop("checked", true);
         $("#UpdateButton").click();
     });
 
     setTimeout(function () {
-        if ($('#gsc_iscreateinvoice').is(":checked")) {
+        if (status == "Pro-forma Invoice") {
             $('.convert-order-link').addClass('permanent-disabled disabled');
             $('.delete-link').addClass('permanent-disabled disabled');
             $('#UpdateButton').addClass('permanent-disabled disabled');
