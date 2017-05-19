@@ -4,6 +4,7 @@ $(document).ready(function (e) {
 
     //set status field readonly 
     $('table[data-name="hideSection"]').closest('fieldset').hide();
+    CheckifGovernment();
 
     setTimeout(function () {
         $("#gsc_portaluserid").val(userId);
@@ -76,6 +77,14 @@ $(document).ready(function (e) {
 
         });
     }, 100);
+
+    function CheckifGovernment() {
+        var customerType = $("#gsc_customertype").val()
+        if (customerType != 100000002) {
+            $("#customerid_name").closest("td").attr("colspan", 4);
+            $('label[for=gsc_markup], input#gsc_markup').hide();
+        }
+    }
 
     //Created By: Artum M. Ramos
     //Vehicle Allocated Items Remove Button
