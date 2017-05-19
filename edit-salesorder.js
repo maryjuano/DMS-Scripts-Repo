@@ -337,7 +337,7 @@ $(document).ready(function () {
     if (status == 'Completed') {
         $(".btnCancel").addClass("permanent-disabled disabled");
     }
-    if (status == 'For Invoicing' || status == "Completed") {
+    if (status == 'For Invoicing' || status == "Completed" || status == "Pro-forma Invoice") {
         $("#gsc_free").attr('disabled', true);
         $("#gsc_freechattelfee").attr('disabled', true);
         $('.control > input').attr('readonly', true);
@@ -358,6 +358,8 @@ $(document).ready(function () {
         $btnCancelCopy = DMS.Helpers.CreateButton('button', "btn-primary btn", 'margin-right:5px', ' CANCEL', DMS.Helpers.CreateFontAwesomeIcon('fa-times-circle'));
         $btnCancelCopy.attr('disabled', 'disabled');
         $('#OrderMonthlyAmortizationSubgrid .editable-grid-toolbar').find($('.delete')).before($btnCancelCopy);
+        $('#UpdateButton').addClass('permanent-disabled disabled');
+        $('.btnReCalculate').addClass('permanent-disabled disabled');
         //checkSubgrid("tabbed-AUTOFINANCING");
 
         setTimeout(function () {
@@ -377,14 +379,6 @@ $(document).ready(function () {
     if (status != "For Invoicing") {
         $(".convert-order-link").addClass("hidden");
         $(".datetimepicker > input").attr("disabled", "true");
-    }
-
-    if (status == "Pro-forma Invoice") {
-        $('.convert-order-link').addClass('permanent-disabled disabled');
-        $('.delete-link').addClass('permanent-disabled disabled');
-        $('#UpdateButton').addClass('permanent-disabled disabled');
-        $('.btnReCalculate').addClass('permanent-disabled disabled');
-        $('.btnCancel').addClass('permanent-disabled disabled');
     }
 
     function checkSubgrid(tableDataName) {
