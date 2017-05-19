@@ -1,12 +1,13 @@
 //Created By : Leslie Baliguat, Created On : 3/16/2016
 $(document).ready(function (e) {
-    var status = $(".record-status").html();
+    var status = "";
 
     //set status field readonly 
     $('table[data-name="hideSection"]').closest('fieldset').hide();
     CheckifGovernment();
 
     setTimeout(function () {
+        var status = $(".record-status").html();
         $("#gsc_portaluserid").val(userId);
         $.cookie("baseModel", $("#gsc_vehiclebasemodelid").val(), { path: '/' });
         $.cookie("productId", $("#gsc_productid").val(), { path: '/' });
@@ -107,12 +108,6 @@ $(document).ready(function (e) {
                 $("#UpdateButton").click();
             }
         });
-    }
-
-    //show convert order to invoice button if status = "For Invoicing"
-    if (status != "For Invoicing") {
-        $(".convert-order-link").addClass("hidden");
-        $(".datetimepicker > input").attr("disabled", "true");
     }
 
     //set readonly fields
@@ -728,19 +723,9 @@ $(document).ready(function (e) {
 
     $(".convert-order-link").click(function () {
         $("#gsc_status").val("100000007");
-       // $("#gsc_iscreateinvoice").prop("checked", true);
+        // $("#gsc_iscreateinvoice").prop("checked", true);
         $("#UpdateButton").click();
     });
-
-    setTimeout(function () {
-        if (status == "Pro-forma Invoice") {
-            $('.convert-order-link').addClass('permanent-disabled disabled');
-            $('.delete-link').addClass('permanent-disabled disabled');
-            $('#UpdateButton').addClass('permanent-disabled disabled');
-            $('.btnReCalculate').addClass('permanent-disabled disabled');
-            $('.btnCancel').addClass('permanent-disabled disabled');
-        }
-    }, 250);
 
     //Negative values validation. Added by Christell Ann Mataac
     $("#gsc_applytouppercentage").attr("min", 0);
