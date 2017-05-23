@@ -435,4 +435,11 @@ $(document).ready(function () {
     //for status copty add by Tom 4/18/2017
     var vpoStatusText = $('#gsc_vpostatus option:selected').text();
     $(".record-status").text(vpoStatusText);
+
+    setTimeout(disableTab, 300);
+
+    function disableTab()
+    {
+        $('.permanent-disabled').attr("tabindex", "-1");
+    }
 });

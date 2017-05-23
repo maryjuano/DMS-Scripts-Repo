@@ -242,6 +242,8 @@ $(document).ready(function () {
         $('#gsc_pulloutdate').siblings(".datetimepicker").children("span").addClass("hidden");
         $('#gsc_pulloutdate').siblings(".datetimepicker").children("input").attr("readonly", true);
         $('#gsc_siteid').siblings('.input-group-btn').addClass('hidden');
+        $(".datetimepicker input").attr("disabled", "disabled");
+        $('#ReceivingTransactionDetail_Subgrid  .entity-grid.subgrid').on('loaded', function () { $('.btn-default.btn-xs').addClass("permanent-disabled disabled"); });
     }
     //End
 
