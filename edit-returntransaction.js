@@ -1,7 +1,17 @@
 //Created By : Raphael Herrera, Created On : 7/18/2016
 $(document).ready(function () {
     
-   
+    setTimeout(function(){
+        
+    createPostButton();
+    hideDevField();
+    var status = $(".record-status").html();
+    if (status == 'Cancelled' || status == 'Returned')
+        {   $(".datetimepicker input").attr("disabled", "disabled");
+            $(".datetimepicker span").hide();
+            setReadOnly();
+        }
+    }, 300);
     // if open show cancel
     if($('#gsc_vrstatus').val() == 100000000) createCancelButton();
     // if cancelled/return hide delete. disable form
@@ -10,13 +20,6 @@ $(document).ready(function () {
       DMS.Helpers.DisableEntityForm();
     }
     
-    
-     createPostButton();
-    hideDevField();
-    var status = $(".record-status").html();
-    
-    if (status == 'Cancelled' || status == 'Returned')
-        setReadOnly();
 
     function createCancelButton() {
      var cancelIcon = DMS.Helpers.CreateFontAwesomeIcon('fa-ban');
@@ -75,12 +78,15 @@ $(document).ready(function () {
 
     function setReadOnly() {
         //disable buttons
+        console.log("set");
         $(".deactivate-link").addClass("permanent-disabled disabled");
         $("#UpdateButton").addClass("permanent-disabled disabled");
         $("#postButton").hide();
+        
         //disbale fieldset
         $("#EntityFormView fieldset").attr("disabled", "disabled");
         $("#EntityFormView fieldset").addClass("permanent-disabled");
+
 
         /*//sets input, dates and ddl to readOnly
         $('#gsc_remarks').attr('readOnly', true);

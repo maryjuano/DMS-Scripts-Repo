@@ -342,6 +342,25 @@ var vehicleComponentChecklistGridInstance = {
 
         var screenSize = ($(window).width() / 2) - 80;
 
+        if($('#gsc_receivingstatus').val() == '100000000')
+        var options = {
+            dataSchema: {
+                gsc_cmn_receivingtransactionchecklistid: null,
+                gsc_included: false,
+                gsc_receivingtransactionchecklistpn: ''
+            },
+            colHeaders: [
+              'Included', 'Vehicle Checklist'
+            ],
+            columns: [
+              { data: 'gsc_included', type: 'checkbox', renderer: checkboxRenderer, readOnly: true, className: 'htCenter htMiddle', width: 80 },
+              { data: 'gsc_receivingtransactionchecklistpn', renderer: stringRenderer, readOnly: true, className: 'htCenter htMiddle', width: 200 }
+            ],
+            gridWidth: 1000,
+            addNewRows: false,
+            deleteRows: false
+        }
+        else
         var options = {
             dataSchema: {
                 gsc_cmn_receivingtransactionchecklistid: null,
