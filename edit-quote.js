@@ -2,9 +2,10 @@ $(document).ready(function () {
     $('form fieldset').attr('disabled', true);
 
     //JGC_01192017 : Disabled Activate Button
-    if ($('#gsc_paymentmode').val() == "100000001" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == "")
+    if (($('#gsc_paymentmode').val() == "100000001" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == "")
            || ($('#gsc_financingschemeid').val() == null || $('#gsc_financingschemeid').val() == "")
-           || ($('#gsc_downpaymentamount').val() == "" || $('#gsc_downpaymentpercentage').val() == "") || ($('#gsc_netmonthlyamortization').html() == "" || $('#gsc_netmonthlyamortization').html() == "₱0.00"))) {
+           || ($('#gsc_downpaymentamount').val() == "" || $('#gsc_downpaymentpercentage').val() == "") || ($('#gsc_netmonthlyamortization').html() == "" || $('#gsc_netmonthlyamortization').html() == "₱0.00"))) || ($('#gsc_paymentmode').val() == "100000002" && (($('#gsc_bankid').val() == null || $('#gsc_bankid').val() == ""))))
+    {
         $(".activate-quote-link").addClass("permanent-disabled disabled");
     }
 
@@ -407,7 +408,7 @@ $(document).ready(function () {
             }
         });
     }, 2000);
-	
+    
     //Added By: Jerome Anthony Gerero
     //Purpose : Hide Cab Chassis Subgrid
     setTimeout(function () {
@@ -466,29 +467,29 @@ $(document).ready(function () {
     }
     $('.text.money').mask("#,##0.00", {reverse: true});
     //Added JGC_04102017 : Enhancement Of Insurance Tab
-	  $("#gsc_totalpremium").on('change', function () {
-	    var totalpremium = 0;
-	    var ctpl = 0;
-	    if ($("#gsc_totalpremium").val() != "") 
+      $("#gsc_totalpremium").on('change', function () {
+        var totalpremium = 0;
+        var ctpl = 0;
+        if ($("#gsc_totalpremium").val() != "") 
         totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
       if($("#gsc_ctpl").val() != "")   
         ctpl = parseFloat($("#gsc_ctpl").cleanVal());
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
       maskTotalInsuranceCharge();
-	  });
-	  $("#gsc_ctpl").on('change', function () {
-	     var totalpremium = 0;
-	     var ctpl = 0;
-	     if ($("#gsc_totalpremium").val() != "") 
+      });
+      $("#gsc_ctpl").on('change', function () {
+         var totalpremium = 0;
+         var ctpl = 0;
+         if ($("#gsc_totalpremium").val() != "") 
         totalpremium = parseFloat($("#gsc_totalpremium").cleanVal());
        if($("#gsc_ctpl").val() != "") 
         ctpl = parseFloat($("#gsc_ctpl").cleanVal());
-	    $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
-	    maskTotalInsuranceCharge();
-	  });
-	  function maskTotalInsuranceCharge() {
-	    $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
-	  }
+        $("#gsc_totalinsurancecharges").val(totalpremium + ctpl);
+        maskTotalInsuranceCharge();
+      });
+      function maskTotalInsuranceCharge() {
+        $('#gsc_totalinsurancecharges').mask('000,000,000,000,000.00', {reverse: true});
+      }
 
     //set page validators
     if (typeof (Page_Validators) == 'undefined') return;
@@ -604,12 +605,7 @@ $(document).ready(function () {
         div.appendChild(span);
         $(".content-wrapper").append(div);
     }
-    setTimeout(disableTab, 3000);
 
-    function disableTab()
-    {
-        $('.disabled').attr("tabindex", "-1");
-    }
 });
 
 var classOdataUrl = "/_odata/gsc_class?$filter=gsc_classmaintenancepn eq 'Accessory'";
@@ -640,7 +636,16 @@ var AccessroiessGridInstance = {
             ],
             columns: [
                 { data: 'gsc_free', type: 'checkbox', renderer: checkboxRenderer, className: "htCenter htMiddle", width: 50 },
-                { data: 'gsc_itemnumber', renderer: stringRenderer, readOnly: true, className: "htCenter htMiddle", width: 100 },
+                { data: 'gsc_itemnumber', className: "htCenter htMiddle", width: 100, renderer: function (instance, td, row, col, prop, value, cellProperties) {
+                        return lookupRenderer(accessoriesSelectData, instance, td, row, col, prop, value, cellProperties);
+                    },
+                    editor: 'select2',
+                    select2Options: { // these options are the select2 initialization options 
+                        data: accessoriesSelectData,
+                        dropdownAutoWidth: true,
+                        allowClear: true,
+                        width: 'resolve'
+                    } },
                 {
                     data: 'gsc_productid', className: "htCenter htMiddle", width: 100, renderer: function (instance, td, row, col, prop, value, cellProperties) {
                         return lookupRenderer(accessoriesSelectData, instance, td, row, col, prop, value, cellProperties);
@@ -749,7 +754,9 @@ var monthlyAmortizationGridInstance = {
         var options = {
             dataSchema: {
                 gsc_isselected: null, gsc_quoteid: { Id: null, Name: null },
-                gsc_financingtermid: { Id: null, Name: null }, gsc_quotemonthlyamortizationpn: null
+                //gsc_financingtermid: { Id: null, Name: null },
+                gsc_financingtermid: null,
+                gsc_quotemonthlyamortizationpn: null
             },
             colHeaders: [
                             'Select Term *',
@@ -758,14 +765,18 @@ var monthlyAmortizationGridInstance = {
             ],
             columns: [
                { data: 'gsc_isselected', type: 'checkbox', renderer: checkboxRenderer, className: "htCenter htMiddle", width: 50 },
-               { data: 'gsc_financingtermid', renderer: multiPropertyRenderer, readOnly: true, className: "htCenter htMiddle", width: 100 },
+               { data: 'gsc_financingtermid.Name', type: 'numeric', readOnly: true, className: "htCenter htMiddle", width: 100 },
                { data: 'gsc_quotemonthlyamortizationpn', renderer: stringRenderer, readOnly: true, className: "htCenter htMiddle", width: 100 }
             ],
+            columnSorting: {
+               column: 1,
+               sortOrder: true
+            },
             gridWidth: screenSize,
             addNewRows: false,
             deleteRows: false
         }
-
+        
         var sectionName = "MonthlyAmortization";
         var attributes = [{ key: 'gsc_isselected', type: 'System.Boolean' }];
         var model = { id: 'gsc_sls_quotemonthlyamortizationid', entity: 'gsc_sls_quotemonthlyamortization', attr: attributes };
